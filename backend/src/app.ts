@@ -5,6 +5,7 @@ import { connectDB } from './config/db';
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler';
 import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
+import teacherRoutes from './routes/teacherRoutes';
 import assignmentRoutes from './routes/assignment.routes';
 import submissionRoutes from './routes/submission.routes';
 import userRoutes from './routes/user.routes';
@@ -43,6 +44,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/teacher', teacherRoutes);
 
 // Additional Module Routes
 app.use('/api/assignments', assignmentRoutes);
