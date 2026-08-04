@@ -26,6 +26,32 @@ export const getAllUsers = async (
 };
 
 /**
+ * @desc    Get list of all courses
+ * @route   GET /api/admin/courses
+ * @access  Private (Admin)
+ */
+export const getAllCourses = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const courses = await Course.find()
+      .populate('assignedTeacherId', 'name email role')
+      .populate('enrolledStudentIds', 'name email role')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: courses.length,
+      data: courses,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * @desc    Create a new course
  * @route   POST /api/admin/courses
  * @access  Private (Admin)
@@ -46,7 +72,6 @@ export const createCourse = async (
       return;
     }
 
-    // Verify teacher exists and has Teacher role
     const teacher = await User.findById(assignedTeacherId);
     if (!teacher || teacher.role !== UserRole.TEACHER) {
       res.status(400).json({
@@ -56,7 +81,6 @@ export const createCourse = async (
       return;
     }
 
-    // Check if course code already exists
     const existingCourse = await Course.findOne({ code: code.toUpperCase() });
     if (existingCourse) {
       res.status(400).json({
@@ -165,7 +189,6 @@ export const enrollStudentsToCourse = async (
       return;
     }
 
-    // Verify all student IDs exist and have Student role
     const validStudents = await User.find({
       _id: { $in: studentIds },
       role: UserRole.STUDENT,

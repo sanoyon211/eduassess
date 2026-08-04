@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
   getAllUsers,
+  getAllCourses,
   createCourse,
   assignTeacherToCourse,
   enrollStudentsToCourse,
@@ -16,6 +17,7 @@ router.use(authorizeRoles(UserRole.ADMIN));
 
 // Endpoints
 router.get('/users', getAllUsers);
+router.get('/courses', getAllCourses);
 router.post('/courses', createCourse);
 router.patch('/courses/:courseId/assign-teacher', assignTeacherToCourse);
 router.post('/courses/:courseId/enroll-students', enrollStudentsToCourse);
