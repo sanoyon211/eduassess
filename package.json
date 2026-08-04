@@ -1,0 +1,25 @@
+{
+  "name": "eduassess-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "EduAssess - Role-Based Assignment Management System Monorepo",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "build:backend": "npm --prefix backend run build",
+    "build:frontend": "npm --prefix frontend run build"
+  },
+  "keywords": [
+    "education",
+    "assignment-management",
+    "express",
+    "nextjs",
+    "typescript"
+  ],
+  "author": "",
+  "license": "ISC"
+}
