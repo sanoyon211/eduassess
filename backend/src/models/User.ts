@@ -28,7 +28,6 @@ const UserSchema = new Schema<IUser>(
       unique: true,
       lowercase: true,
       trim: true,
-      index: true,
     },
     password: {
       type: String,
@@ -42,7 +41,6 @@ const UserSchema = new Schema<IUser>(
         message: '{VALUE} is not a valid role',
       },
       default: UserRole.STUDENT,
-      index: true,
     },
   },
   {
@@ -50,7 +48,9 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-// Indexes
+// Explicit schema indexes
+UserSchema.index({ email: 1 }, { unique: true });
+UserSchema.index({ role: 1 });
 UserSchema.index({ email: 1, role: 1 });
 
 export const User = model<IUser>('User', UserSchema);

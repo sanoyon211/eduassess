@@ -22,13 +22,11 @@ const CourseSchema = new Schema<ICourse>(
       unique: true,
       uppercase: true,
       trim: true,
-      index: true,
     },
     assignedTeacherId: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Assigned teacher is required'],
-      index: true,
     },
     enrolledStudentIds: [
       {
@@ -42,8 +40,8 @@ const CourseSchema = new Schema<ICourse>(
   }
 );
 
-// Indexes for performance
-CourseSchema.index({ code: 1 });
+// Explicit schema indexes for performance
+CourseSchema.index({ code: 1 }, { unique: true });
 CourseSchema.index({ assignedTeacherId: 1 });
 
 export const Course = model<ICourse>('Course', CourseSchema);
