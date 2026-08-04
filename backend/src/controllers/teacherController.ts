@@ -2,6 +2,7 @@ import { Response, NextFunction } from 'express';
 import { AuthenticatedRequest } from '../middlewares/authMiddleware';
 import { Assignment, AssignmentStatus } from '../models/Assignment';
 import { Course } from '../models/Course';
+import { Submission, SubmissionStatus } from '../models/Submission';
 
 /**
  * @desc    Create a new assignment for a specific course
@@ -25,7 +26,6 @@ export const createAssignment = async (
       return;
     }
 
-    // Check if target course exists
     const course = await Course.findById(courseId);
     if (!course) {
       res.status(404).json({
@@ -35,7 +35,6 @@ export const createAssignment = async (
       return;
     }
 
-    // Optional check: verify teacher is assigned to this course
     if (course.assignedTeacherId.toString() !== teacherId) {
       res.status(403).json({
         success: false,
@@ -128,7 +127,6 @@ export const updateAssignment = async (
       return;
     }
 
-    // Apply updates
     if (title !== undefined) assignment.title = title;
     if (description !== undefined) assignment.description = description;
     if (dueDate !== undefined) assignment.dueDate = new Date(dueDate);
@@ -144,6 +142,127 @@ export const updateAssignment = async (
       success: true,
       message: 'Assignment updated successfully',
       data: updatedAssignment,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Get all student submissions for a specific assignment (IDOR protected)
+ * @route   GET /api/teacher/assignments/:assignmentId/submissions
+ * @access  Private (Teacher)
+ */
+export const getAssignmentSubmissions = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { assignmentId } = req.params;
+    const teacherId = req.user?.userId;
+
+    const assignment = await Assignment.findById(assignmentId);
+    if (!assignment) {
+      res.status(404).json({
+        success: false,
+        message: 'Assignment not found',
+      });
+      return;
+    }
+
+    // IDOR Protection: Validate that the assignment was created by the requesting teacher
+    if (assignment.createdByTeacherId.toString() !== teacherId) {
+      res.status(403).json({
+        success: false,
+        message: 'Forbidden. You can only view submissions for assignments created by you.',
+      });
+      return;
+    }
+
+    const submissions = await Submission.find({ assignmentId })
+      .populate('studentId', 'name email')
+      .sort({ submittedAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: submissions.length,
+      data: submissions,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * @desc    Grade a student submission (IDOR protected)
+ * @route   PATCH /api/teacher/submissions/:submissionId/grade
+ * @access  Private (Teacher)
+ */
+export const gradeSubmission = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { submissionId } = req.params;
+    const { marks, teacherFeedback } = req.body;
+    const teacherId = req.user?.userId;
+
+    if (marks === undefined || typeof marks !== 'number') {
+      res.status(400).json({
+        success: false,
+        message: 'A numeric marks value is required',
+      });
+      return;
+    }
+
+    const submission = await Submission.findById(submissionId);
+    if (!submission) {
+      res.status(404).json({
+        success: false,
+        message: 'Submission not found',
+      });
+      return;
+    }
+
+    // Fetch associated assignment to verify ownership
+    const assignment = await Assignment.findById(submission.assignmentId);
+    if (!assignment) {
+      res.status(404).json({
+        success: false,
+        message: 'Associated assignment not found',
+      });
+      return;
+    }
+
+    // IDOR Protection: Ensure teacher cannot grade submissions for assignments belonging to other teachers
+    if (assignment.createdByTeacherId.toString() !== teacherId) {
+      res.status(403).json({
+        success: false,
+        message: 'Forbidden. You cannot grade submissions for assignments belonging to another teacher.',
+      });
+      return;
+    }
+
+    submission.marks = marks;
+    submission.teacherFeedback = teacherFeedback || '';
+    submission.status = SubmissionStatus.GRADED;
+
+    await submission.save();
+
+    const updatedSubmission = await Submission.findById(submission._id)
+      .populate('studentId', 'name email')
+      .populate({
+        path: 'assignmentId',
+        select: 'title courseId',
+        populate: { path: 'courseId', select: 'name code' },
+      });
+
+    res.status(200).json({
+      success: true,
+      message: 'Submission graded successfully',
+      data: updatedSubmission,
     });
   } catch (error) {
     next(error);
