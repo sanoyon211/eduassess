@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import { connectDB } from './config/db';
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler';
 import authRoutes from './routes/authRoutes';
+import adminRoutes from './routes/adminRoutes';
 import assignmentRoutes from './routes/assignment.routes';
 import submissionRoutes from './routes/submission.routes';
 import userRoutes from './routes/user.routes';
@@ -39,8 +40,9 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
-// Authentication Routes connected under /api/auth
+// API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Additional Module Routes
 app.use('/api/assignments', assignmentRoutes);
