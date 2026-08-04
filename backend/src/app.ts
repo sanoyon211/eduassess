@@ -6,6 +6,7 @@ import { notFoundHandler, errorHandler } from './middlewares/errorHandler';
 import authRoutes from './routes/authRoutes';
 import adminRoutes from './routes/adminRoutes';
 import teacherRoutes from './routes/teacherRoutes';
+import studentRoutes from './routes/studentRoutes';
 import assignmentRoutes from './routes/assignment.routes';
 import submissionRoutes from './routes/submission.routes';
 import userRoutes from './routes/user.routes';
@@ -45,6 +46,7 @@ app.get('/api/health', (req: Request, res: Response) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/teacher', teacherRoutes);
+app.use('/api/student', studentRoutes);
 
 // Additional Module Routes
 app.use('/api/assignments', assignmentRoutes);
