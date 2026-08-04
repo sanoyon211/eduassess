@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db';
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler';
-import authRoutes from './routes/auth.routes';
+import authRoutes from './routes/authRoutes';
 import assignmentRoutes from './routes/assignment.routes';
 import submissionRoutes from './routes/submission.routes';
 import userRoutes from './routes/user.routes';
@@ -39,8 +39,10 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
-// API Routes
+// Authentication Routes connected under /api/auth
 app.use('/api/auth', authRoutes);
+
+// Additional Module Routes
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/submissions', submissionRoutes);
 app.use('/api/users', userRoutes);
