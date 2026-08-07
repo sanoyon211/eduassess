@@ -172,3 +172,94 @@ export const getMySubmissions = async (
     next(error);
   }
 };
+
+/**
+ * @desc    Update an existing submission before deadline (Strict IDOR & deadline enforcement)
+ * @route   PUT /api/student/submissions/:id
+ * @access  Private (Student)
+ */
+export const updateSubmission = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { id } = req.params;
+    const { fileUrl } = req.body;
+    const studentId = req.user?.userId;
+
+    if (!fileUrl) {
+      res.status(400).json({
+        success: false,
+        message: 'Updated submission file URL is required',
+      });
+      return;
+    }
+
+    const submission = await Submission.findById(id);
+    if (!submission) {
+      res.status(404).json({
+        success: false,
+        message: 'Submission not found',
+      });
+      return;
+    }
+
+    // IDOR Protection: Student can only edit their own submission
+    if (submission.studentId.toString() !== studentId) {
+      res.status(403).json({
+        success: false,
+        message: 'Forbidden. You can only update your own submission.',
+      });
+      return;
+    }
+
+    // Cannot edit if already graded
+    if (submission.status === SubmissionStatus.GRADED) {
+      res.status(400).json({
+        success: false,
+        message: 'Cannot update a submission that has already been graded by the teacher.',
+      });
+      return;
+    }
+
+    const assignment = await Assignment.findById(submission.assignmentId);
+    if (!assignment) {
+      res.status(404).json({
+        success: false,
+        message: 'Associated assignment not found',
+      });
+      return;
+    }
+
+    // Deadline Enforcement: Prevent update past dueDate
+    const now = new Date();
+    if (now > new Date(assignment.dueDate)) {
+      res.status(400).json({
+        success: false,
+        message: 'Submission update failed. The assignment due date has passed.',
+      });
+      return;
+    }
+
+    submission.fileUrl = fileUrl;
+    submission.submittedAt = now;
+    await submission.save();
+
+    const updatedSubmission = await Submission.findById(submission._id)
+      .populate({
+        path: 'assignmentId',
+        select: 'title description dueDate courseId maxMarks',
+        populate: { path: 'courseId', select: 'name code' },
+      })
+      .populate('studentId', 'name email');
+
+    res.status(200).json({
+      success: true,
+      message: 'Submission updated successfully',
+      data: updatedSubmission,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

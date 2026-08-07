@@ -62,6 +62,7 @@ export default function StudentAssignmentDetailPage() {
 
   // Submission Form State
   const [fileUrl, setFileUrl] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -91,6 +92,9 @@ export default function StudentAssignmentDetailPage() {
       });
 
       setSubmission(foundSub || null);
+      if (foundSub) {
+        setFileUrl(foundSub.fileUrl);
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load assignment details.');
     } finally {
@@ -115,13 +119,21 @@ export default function StudentAssignmentDetailPage() {
 
     setIsSubmitting(true);
     try {
-      const response = await api.post('/student/submissions', {
-        assignmentId,
-        fileUrl,
-      });
-
-      setSubmission(response.data.data);
-      setFileUrl('');
+      if (submission && (isEditing || submission.status === 'Pending')) {
+        const response = await api.put(`/student/submissions/${submission._id}`, {
+          fileUrl,
+        });
+        setSubmission(response.data.data);
+        setIsEditing(false);
+      } else {
+        const response = await api.post('/student/submissions', {
+          assignmentId,
+          fileUrl,
+        });
+        setSubmission(response.data.data);
+        setFileUrl(response.data.data.fileUrl);
+        setIsEditing(false);
+      }
     } catch (err: any) {
       setFormError(err.response?.data?.message || 'Failed to submit assignment.');
     } finally {
@@ -242,7 +254,7 @@ export default function StudentAssignmentDetailPage() {
                   Your work was submitted on <span className="font-semibold">{format(new Date(submission.submittedAt), 'MMM dd, yyyy HH:mm')}</span> and is currently awaiting instructor evaluation.
                 </p>
 
-                <div className="pt-2">
+                <div className="pt-2 flex flex-wrap items-center gap-3">
                   <a
                     href={submission.fileUrl}
                     target="_blank"
@@ -251,6 +263,20 @@ export default function StudentAssignmentDetailPage() {
                   >
                     View Submitted Solution Link <ExternalLink className="h-3.5 w-3.5" />
                   </a>
+                  {!isPastDueDate && !isEditing && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => {
+                        setIsEditing(true);
+                        setFileUrl(submission.fileUrl);
+                      }}
+                      className="text-xs text-blue-700 border-blue-300 bg-white hover:bg-blue-100"
+                    >
+                      Update / Resubmit Solution
+                    </Button>
+                  )}
                 </div>
               </div>
             )}
@@ -269,22 +295,58 @@ export default function StudentAssignmentDetailPage() {
             )}
 
             {/* SUBMISSION FORM SECTION */}
-            {submission ? (
+            {submission && submission.status === 'Graded' ? (
               <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex items-center gap-3 text-slate-500 text-xs font-medium">
                 <Lock className="h-4 w-4 text-slate-400" />
-                <span>Submission Form Locked — You have already submitted a solution for this assignment.</span>
+                <span>Submission Form Locked — Instructor has completed grading your submission.</span>
               </div>
             ) : isPastDueDate ? (
               <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex items-center gap-3 text-slate-500 text-xs font-medium">
                 <Lock className="h-4 w-4 text-slate-400" />
                 <span>Submission Form Locked — The assignment due date has passed.</span>
               </div>
+            ) : submission && !isEditing ? (
+              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex items-center justify-between gap-3 text-slate-700 text-xs font-medium">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                  <span>You submitted a solution for this assignment. You can update your link before the deadline.</span>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    setIsEditing(true);
+                    setFileUrl(submission.fileUrl);
+                  }}
+                  className="text-xs"
+                >
+                  Update Solution Link
+                </Button>
+              </div>
             ) : (
-              /* ACTIVE SUBMISSION FORM */
+              /* ACTIVE SUBMISSION FORM (NEW OR UPDATE) */
               <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-                <div className="border-b border-slate-100 pb-3">
-                  <h3 className="text-base font-bold text-slate-900">Submit Your Work</h3>
-                  <p className="text-xs text-slate-600">Provide a URL link to your completed solution (e.g., GitHub repo, Google Drive, or hosted file).</p>
+                <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-bold text-slate-900">
+                      {isEditing ? 'Update Your Submitted Solution' : 'Submit Your Work'}
+                    </h3>
+                    <p className="text-xs text-slate-600">
+                      Provide a URL link to your completed solution (e.g., GitHub repo, Google Drive, or hosted file).
+                    </p>
+                  </div>
+                  {isEditing && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setIsEditing(false)}
+                      className="text-xs"
+                    >
+                      Cancel Edit
+                    </Button>
+                  )}
                 </div>
 
                 {formError && (
@@ -305,9 +367,19 @@ export default function StudentAssignmentDetailPage() {
                     helperText="Ensure link permissions are accessible to your instructor."
                   />
 
-                  <div className="flex justify-end pt-2">
+                  <div className="flex justify-end space-x-3 pt-2">
+                    {isEditing && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => setIsEditing(false)}
+                        disabled={isSubmitting}
+                      >
+                        Cancel
+                      </Button>
+                    )}
                     <Button type="submit" variant="primary" isLoading={isSubmitting} className="gap-1.5">
-                      <Send className="h-4 w-4" /> Submit Solution
+                      <Send className="h-4 w-4" /> {isEditing ? 'Save Updated Solution' : 'Submit Solution'}
                     </Button>
                   </div>
                 </form>
