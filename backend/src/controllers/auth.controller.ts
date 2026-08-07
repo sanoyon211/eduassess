@@ -1,20 +1,34 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 import { User, UserRole } from '../models/User';
-import { generateToken } from '../utils/jwt';
 
-export const registerUser = async (req: Request, res: Response): Promise<void> => {
+const JWT_SECRET = process.env.JWT_SECRET || 'eduassess_jwt_secret_key';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+
+/**
+ * @desc    Register a new user
+ * @route   POST /api/auth/register
+ * @access  Public
+ */
+export const register = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
-      res.status(400).json({ success: false, message: 'Name, email, and password are required' });
+      res.status(400).json({
+        success: false,
+        message: 'Please provide name, email, and password',
+      });
       return;
     }
 
-    const existing = await User.findOne({ email: email.toLowerCase() });
-    if (existing) {
-      res.status(400).json({ success: false, message: 'Email already registered' });
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
+    if (existingUser) {
+      res.status(400).json({
+        success: false,
+        message: 'An account with this email already exists',
+      });
       return;
     }
 
@@ -28,71 +42,108 @@ export const registerUser = async (req: Request, res: Response): Promise<void> =
       role: role || UserRole.STUDENT,
     });
 
-    const token = generateToken({
-      userId: (user._id as any).toString(),
+    const token = jwt.sign(
+      {
+        userId: user._id.toString(),
+        role: user.role,
+        email: user.email,
+      },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN as any }
+    );
+
+    const userResponse = {
+      _id: user._id,
+      name: user.name,
       email: user.email,
       role: user.role,
-    });
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
 
     res.status(201).json({
       success: true,
       message: 'User registered successfully',
+      token,
+      user: userResponse,
       data: {
         token,
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        },
+        user: userResponse,
       },
     });
-  } catch (error: any) {
-    res.status(500).json({ success: false, message: error.message });
+  } catch (error) {
+    next(error);
   }
 };
 
-export const loginUser = async (req: Request, res: Response): Promise<void> => {
+/**
+ * @desc    Authenticate user & get JWT token
+ * @route   POST /api/auth/login
+ * @access  Public
+ */
+export const login = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      res.status(400).json({ success: false, message: 'Email and password are required' });
+      res.status(400).json({
+        success: false,
+        message: 'Please provide email and password',
+      });
       return;
     }
 
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
-      res.status(401).json({ success: false, message: 'Invalid credentials' });
+      res.status(401).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
       return;
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      res.status(401).json({ success: false, message: 'Invalid credentials' });
+      res.status(401).json({
+        success: false,
+        message: 'Invalid email or password',
+      });
       return;
     }
 
-    const token = generateToken({
-      userId: (user._id as any).toString(),
+    const token = jwt.sign(
+      {
+        userId: user._id.toString(),
+        role: user.role,
+        email: user.email,
+      },
+      JWT_SECRET,
+      { expiresIn: JWT_EXPIRES_IN as any }
+    );
+
+    const userResponse = {
+      _id: user._id,
+      name: user.name,
       email: user.email,
       role: user.role,
-    });
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
 
     res.status(200).json({
       success: true,
       message: 'Login successful',
+      token,
+      user: userResponse,
       data: {
         token,
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        },
+        user: userResponse,
       },
     });
-  } catch (error: any) {
-    res.status(500).json({ success: false, message: error.message });
+  } catch (error) {
+    next(error);
   }
 };
+
+export const registerUser = register;
+export const loginUser = login;

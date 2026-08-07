@@ -4,15 +4,8 @@ import compression from 'compression';
 import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db';
-import { notFoundHandler, errorHandler } from './middlewares/errorHandler';
-import authRoutes from './routes/authRoutes';
-import adminRoutes from './routes/adminRoutes';
-import teacherRoutes from './routes/teacherRoutes';
-import studentRoutes from './routes/studentRoutes';
-import assignmentRoutes from './routes/assignment.routes';
-import submissionRoutes from './routes/submission.routes';
-import userRoutes from './routes/user.routes';
-
+import { notFoundHandler, errorHandler } from './middlewares/error.middleware';
+import apiRouter from './routes';
 import swaggerUi from 'swagger-ui-express';
 import { swaggerSpec } from './config/swagger';
 
@@ -40,7 +33,7 @@ app.get('/', (req: Request, res: Response) => {
     success: true,
     message: 'EduAssess Backend API Server Running',
     port: PORT,
-    documentation: 'http://localhost:5000/api-docs',
+    documentation: `http://localhost:${PORT}/api-docs`,
     timestamp: new Date().toISOString(),
   });
 });
@@ -50,20 +43,12 @@ app.get('/api/health', (req: Request, res: Response) => {
     success: true,
     status: 'online',
     message: 'EduAssess API Health Check Passed',
-    documentation: 'http://localhost:5000/api-docs',
+    documentation: `http://localhost:${PORT}/api-docs`,
   });
 });
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/teacher', teacherRoutes);
-app.use('/api/student', studentRoutes);
-
-// Additional Module Routes
-app.use('/api/assignments', assignmentRoutes);
-app.use('/api/submissions', submissionRoutes);
-app.use('/api/users', userRoutes);
+// Centralized API Routes
+app.use('/api', apiRouter);
 
 // Handle Unhandled Routes (404)
 app.use(notFoundHandler);
