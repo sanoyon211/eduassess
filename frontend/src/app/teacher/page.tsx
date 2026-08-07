@@ -64,7 +64,7 @@ export default function TeacherDashboardPage() {
       header: 'Course Module',
       className: 'min-w-[200px]',
       render: (a) => (
-        <span className="inline-block font-semibold text-slate-800 text-xs bg-slate-100/90 px-2.5 py-1 rounded-md border border-slate-200/90 whitespace-nowrap">
+        <span className="inline-block font-mono font-semibold text-slate-800 text-xs bg-slate-100/90 px-2.5 py-1 rounded-md border border-slate-200/90 whitespace-nowrap">
           {a.courseId ? `${a.courseId.code} - ${a.courseId.name}` : 'N/A'}
         </span>
       ),
