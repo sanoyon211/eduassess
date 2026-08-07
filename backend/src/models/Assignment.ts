@@ -11,6 +11,7 @@ export interface IAssignment extends Document {
   dueDate: Date;
   courseId: Types.ObjectId;
   createdByTeacherId: Types.ObjectId;
+  maxMarks: number;
   status: AssignmentStatus;
   createdAt: Date;
   updatedAt: Date;
@@ -31,6 +32,12 @@ const AssignmentSchema = new Schema<IAssignment>(
     dueDate: {
       type: Date,
       required: [true, 'Due date is required'],
+    },
+    maxMarks: {
+      type: Number,
+      required: [true, 'Maximum marks are required'],
+      min: [1, 'Maximum marks must be at least 1'],
+      default: 100,
     },
     courseId: {
       type: Schema.Types.ObjectId,

@@ -27,9 +27,15 @@ interface StudentInfo {
   email: string;
 }
 
+interface AssignmentInfo {
+  _id: string;
+  title?: string;
+  maxMarks?: number;
+}
+
 interface SubmissionRecord {
   _id: string;
-  assignmentId: string;
+  assignmentId: AssignmentInfo | string;
   studentId: StudentInfo;
   fileUrl: string;
   submittedAt: string;
@@ -159,12 +165,14 @@ export default function AssignmentDetailPage() {
     {
       key: 'marks',
       header: 'Score / Marks',
-      render: (s) =>
-        s.status === 'Graded' ? (
-          <span className="font-bold text-slate-900">{s.marks ?? 0} pts</span>
+      render: (s) => {
+        const max = typeof s.assignmentId === 'object' ? s.assignmentId.maxMarks ?? 100 : 100;
+        return s.status === 'Graded' ? (
+          <span className="font-bold text-slate-900">{s.marks ?? 0} / {max}</span>
         ) : (
           <span className="text-slate-400 text-xs">-</span>
-        ),
+        );
+      },
     },
     {
       key: 'actions',
@@ -182,6 +190,10 @@ export default function AssignmentDetailPage() {
       ),
     },
   ];
+
+  const currentMaxMarks = selectedSubmission && typeof selectedSubmission.assignmentId === 'object'
+    ? selectedSubmission.assignmentId.maxMarks ?? 100
+    : 100;
 
   return (
     <DashboardLayout>
@@ -247,11 +259,11 @@ export default function AssignmentDetailPage() {
 
               <form onSubmit={handleGradeSubmit} className="space-y-4">
                 <Input
-                  label="Awarded Score / Marks (Out of 100)"
+                  label={`Awarded Score / Marks (Out of ${currentMaxMarks})`}
                   type="number"
                   min={0}
-                  max={100}
-                  placeholder="e.g. 95"
+                  max={currentMaxMarks}
+                  placeholder={`e.g. ${Math.round(currentMaxMarks * 0.9)}`}
                   value={marks}
                   onChange={(e) => setMarks(e.target.value === '' ? '' : Number(e.target.value))}
                   required

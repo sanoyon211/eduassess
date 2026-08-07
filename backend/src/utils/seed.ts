@@ -102,6 +102,7 @@ const seedDatabase = async () => {
         dueDate: sevenDaysFromNow,
         courseId: course1._id,
         createdByTeacherId: teacher1._id,
+        maxMarks: 100,
         status: AssignmentStatus.PUBLISHED,
       },
       {
@@ -110,6 +111,7 @@ const seedDatabase = async () => {
         dueDate: tenDaysFromNow,
         courseId: course2._id,
         createdByTeacherId: teacher2._id,
+        maxMarks: 100,
         status: AssignmentStatus.PUBLISHED,
       },
       {
@@ -118,6 +120,7 @@ const seedDatabase = async () => {
         dueDate: sevenDaysFromNow,
         courseId: course1._id,
         createdByTeacherId: teacher1._id,
+        maxMarks: 50,
         status: AssignmentStatus.DRAFT,
       },
     ]);

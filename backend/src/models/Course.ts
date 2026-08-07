@@ -41,7 +41,6 @@ const CourseSchema = new Schema<ICourse>(
 );
 
 // Explicit schema indexes for performance
-CourseSchema.index({ code: 1 }, { unique: true });
 CourseSchema.index({ assignedTeacherId: 1 });
 
 export const Course = model<ICourse>('Course', CourseSchema);

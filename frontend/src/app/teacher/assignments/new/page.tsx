@@ -31,6 +31,7 @@ export default function NewAssignmentPage() {
   const [description, setDescription] = useState('');
   const [courseId, setCourseId] = useState('');
   const [dueDate, setDueDate] = useState('');
+  const [maxMarks, setMaxMarks] = useState('100');
   const [status, setStatus] = useState<'Published' | 'Draft'>('Published');
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -72,7 +73,7 @@ export default function NewAssignmentPage() {
     e.preventDefault();
     setError(null);
 
-    if (!title || !description || !dueDate || !courseId) {
+    if (!title || !description || !dueDate || !courseId || !maxMarks) {
       setError('Please fill in all required fields.');
       return;
     }
@@ -84,6 +85,7 @@ export default function NewAssignmentPage() {
         description,
         dueDate: new Date(dueDate).toISOString(),
         courseId,
+        maxMarks: Number(maxMarks),
         status,
       });
 
@@ -167,12 +169,22 @@ export default function NewAssignmentPage() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Input
                 label="Submission Due Date"
                 type="datetime-local"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
+                required
+                disabled={isSubmitting}
+              />
+
+              <Input
+                label="Maximum Marks"
+                type="number"
+                min={1}
+                value={maxMarks}
+                onChange={(e) => setMaxMarks(e.target.value)}
                 required
                 disabled={isSubmitting}
               />

@@ -15,7 +15,7 @@ export const createAssignment = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { title, description, dueDate, courseId, status } = req.body;
+    const { title, description, dueDate, courseId, maxMarks, status } = req.body;
     const teacherId = req.user?.userId;
 
     if (!title || !description || !dueDate || !courseId) {
@@ -49,6 +49,7 @@ export const createAssignment = async (
       dueDate: new Date(dueDate),
       courseId,
       createdByTeacherId: teacherId,
+      maxMarks: maxMarks !== undefined ? Number(maxMarks) : 100,
       status: status || AssignmentStatus.PUBLISHED,
     });
 
@@ -105,7 +106,7 @@ export const updateAssignment = async (
 ): Promise<void> => {
   try {
     const { id } = req.params;
-    const { title, description, dueDate, status } = req.body;
+    const { title, description, dueDate, maxMarks, status } = req.body;
     const teacherId = req.user?.userId;
 
     const assignment = await Assignment.findById(id);
@@ -130,6 +131,7 @@ export const updateAssignment = async (
     if (title !== undefined) assignment.title = title;
     if (description !== undefined) assignment.description = description;
     if (dueDate !== undefined) assignment.dueDate = new Date(dueDate);
+    if (maxMarks !== undefined) assignment.maxMarks = Number(maxMarks);
     if (status !== undefined) assignment.status = status;
 
     await assignment.save();
@@ -226,7 +228,7 @@ export const gradeSubmission = async (
       return;
     }
 
-    // Fetch associated assignment to verify ownership
+    // Fetch associated assignment to verify ownership & maximum marks limit
     const assignment = await Assignment.findById(submission.assignmentId);
     if (!assignment) {
       res.status(404).json({
@@ -241,6 +243,14 @@ export const gradeSubmission = async (
       res.status(403).json({
         success: false,
         message: 'Forbidden. You cannot grade submissions for assignments belonging to another teacher.',
+      });
+      return;
+    }
+
+    if (marks < 0 || marks > assignment.maxMarks) {
+      res.status(400).json({
+        success: false,
+        message: `Marks must be between 0 and maximum marks (${assignment.maxMarks})`,
       });
       return;
     }
