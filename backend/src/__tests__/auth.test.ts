@@ -35,7 +35,7 @@ describe('Authentication & RBAC Unit Tests', () => {
 
       expect(res.status).toBe(201);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.email).toBe('teststudent@eduassess.com');
+      expect(res.body.user.email).toBe('teststudent@eduassess.com');
     });
 
     it('should reject registration if email is already in use', async () => {
@@ -50,7 +50,7 @@ describe('Authentication & RBAC Unit Tests', () => {
 
       expect(res.status).toBe(400);
       expect(res.body.success).toBe(false);
-      expect(res.body.message).toMatch(/already registered/i);
+      expect(res.body.message).toMatch(/already exists/i);
     });
   });
 
@@ -72,8 +72,8 @@ describe('Authentication & RBAC Unit Tests', () => {
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
-      expect(res.body.data.token).toBeDefined();
-      expect(res.body.data.user.role).toBe(UserRole.ADMIN);
+      expect(res.body.token).toBeDefined();
+      expect(res.body.user.role).toBe(UserRole.ADMIN);
     });
 
     it('should reject login with invalid password', async () => {

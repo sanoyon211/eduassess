@@ -12,11 +12,13 @@ app.use('/api/teacher', teacherRoutes);
 jest.mock('../models/Assignment');
 jest.mock('../models/Course');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'eduassess_jwt_secret_key';
+
 describe('Teacher Assignment Business Logic Unit Tests', () => {
   const mockTeacherId = 'teacher123';
   const mockToken = jwt.sign(
     { userId: mockTeacherId, email: 'teacher@eduassess.com', role: 'Teacher' },
-    process.env.JWT_SECRET || 'eduassess_super_secret_jwt_key_2026_safe'
+    JWT_SECRET
   );
 
   afterEach(() => {

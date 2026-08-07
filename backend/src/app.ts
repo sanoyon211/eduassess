@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import compression from 'compression';
+import helmet from 'helmet';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db';
 import { notFoundHandler, errorHandler } from './middlewares/errorHandler';
@@ -19,7 +21,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Core Middlewares
+// Security & Performance Middlewares
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(compression());
 app.use(cors({
   origin: process.env.CORS_ORIGIN || '*',
   credentials: true,

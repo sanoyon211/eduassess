@@ -14,11 +14,13 @@ jest.mock('../models/Submission');
 jest.mock('../models/Assignment');
 jest.mock('../models/Course');
 
+const JWT_SECRET = process.env.JWT_SECRET || 'eduassess_jwt_secret_key';
+
 describe('Student Submission Workflow & Business Rules Unit Tests', () => {
   const mockStudentId = 'student123';
   const mockToken = jwt.sign(
     { userId: mockStudentId, email: 'student@eduassess.com', role: 'Student' },
-    process.env.JWT_SECRET || 'eduassess_super_secret_jwt_key_2026_safe'
+    JWT_SECRET
   );
 
   afterEach(() => {
@@ -27,7 +29,7 @@ describe('Student Submission Workflow & Business Rules Unit Tests', () => {
 
   describe('POST /api/student/submissions', () => {
     it('should allow student to submit an answer before deadline', async () => {
-      const futureDate = new Date(Date.now() + 86400000); // 1 day in future
+      const futureDate = new Date(Date.now() + 86400000);
       (Assignment.findById as jest.Mock).mockResolvedValue({
         _id: 'assign123',
         status: AssignmentStatus.PUBLISHED,
@@ -71,7 +73,7 @@ describe('Student Submission Workflow & Business Rules Unit Tests', () => {
     });
 
     it('should reject submission if due date has passed (Deadline Enforcement)', async () => {
-      const pastDate = new Date(Date.now() - 86400000); // 1 day in past
+      const pastDate = new Date(Date.now() - 86400000);
       (Assignment.findById as jest.Mock).mockResolvedValue({
         _id: 'assign123',
         status: AssignmentStatus.PUBLISHED,
@@ -110,19 +112,22 @@ describe('Student Submission Workflow & Business Rules Unit Tests', () => {
         save: jest.fn().mockResolvedValue(true),
       };
 
-      (Submission.findById as jest.Mock).mockResolvedValue(mockExistingSub);
+      const mockPopulated = {
+        ...mockExistingSub,
+        fileUrl: 'https://github.com/student/new-updated-solution',
+      };
+
+      (Submission.findById as jest.Mock)
+        .mockResolvedValueOnce(mockExistingSub)
+        .mockReturnValueOnce({
+          populate: jest.fn().mockReturnValue({
+            populate: jest.fn().mockResolvedValue(mockPopulated),
+          }),
+        });
+
       (Assignment.findById as jest.Mock).mockResolvedValue({
         _id: 'assign123',
         dueDate: futureDate,
-      });
-
-      (Submission.findById as jest.Mock).mockReturnValue({
-        populate: jest.fn().mockReturnValue({
-          populate: jest.fn().mockResolvedValue({
-            ...mockExistingSub,
-            fileUrl: 'https://github.com/student/new-updated-solution',
-          }),
-        }),
       });
 
       const res = await request(app)
@@ -134,6 +139,7 @@ describe('Student Submission Workflow & Business Rules Unit Tests', () => {
 
       expect(res.status).toBe(200);
       expect(res.body.success).toBe(true);
+      expect(res.body.data.fileUrl).toBe('https://github.com/student/new-updated-solution');
     });
   });
 });
