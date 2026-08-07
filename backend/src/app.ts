@@ -11,6 +11,9 @@ import assignmentRoutes from './routes/assignment.routes';
 import submissionRoutes from './routes/submission.routes';
 import userRoutes from './routes/user.routes';
 
+import swaggerUi from 'swagger-ui-express';
+import { swaggerSpec } from './config/swagger';
+
 dotenv.config();
 
 const app = express();
@@ -24,12 +27,16 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Swagger OpenAPI Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 // Base Route & Health Check
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
     message: 'EduAssess Backend API Server Running',
     port: PORT,
+    documentation: 'http://localhost:5000/api-docs',
     timestamp: new Date().toISOString(),
   });
 });
@@ -39,6 +46,7 @@ app.get('/api/health', (req: Request, res: Response) => {
     success: true,
     status: 'online',
     message: 'EduAssess API Health Check Passed',
+    documentation: 'http://localhost:5000/api-docs',
   });
 });
 
