@@ -90,14 +90,15 @@ export default function StudentSubmissionsPage() {
     {
       key: 'assignment',
       header: 'Assignment & Course',
+      className: 'min-w-[220px]',
       render: (sub) => {
         const course = sub.assignmentId?.courseId;
         return (
           <div>
             <div className="font-semibold text-slate-900">{sub.assignmentId?.title || 'Assignment'}</div>
             {course && (
-              <span className="inline-flex items-center gap-1 text-xs text-blue-600 font-medium mt-0.5">
-                <BookOpen className="h-3 w-3" />
+              <span className="inline-flex items-center gap-1 text-xs text-blue-600 font-medium mt-0.5 whitespace-nowrap">
+                <BookOpen className="h-3 w-3 shrink-0" />
                 {course.code} - {course.name}
               </span>
             )}
@@ -108,8 +109,9 @@ export default function StudentSubmissionsPage() {
     {
       key: 'submittedAt',
       header: 'Submitted Date',
+      className: 'min-w-[150px]',
       render: (sub) => (
-        <span className="text-xs text-slate-600">
+        <span className="text-xs text-slate-600 whitespace-nowrap">
           {sub.submittedAt ? format(new Date(sub.submittedAt), 'MMM d, yyyy • h:mm a') : 'N/A'}
         </span>
       ),
@@ -117,14 +119,15 @@ export default function StudentSubmissionsPage() {
     {
       key: 'file',
       header: 'Submitted Work',
+      className: 'min-w-[120px]',
       render: (sub) => (
         <a
           href={sub.fileUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 hover:underline font-medium"
+          className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 hover:underline font-medium whitespace-nowrap"
         >
-          <ExternalLink className="h-3.5 w-3.5 mr-1" />
+          <ExternalLink className="h-3.5 w-3.5 mr-1 shrink-0" />
           View File
         </a>
       ),
@@ -132,6 +135,7 @@ export default function StudentSubmissionsPage() {
     {
       key: 'status',
       header: 'Status',
+      className: 'min-w-[110px]',
       render: (sub) => (
         <Badge variant={sub.status === 'Graded' ? 'success' : 'warning'}>
           {sub.status === 'Graded' ? (
@@ -146,8 +150,9 @@ export default function StudentSubmissionsPage() {
     {
       key: 'marks',
       header: 'Grade / Marks',
+      className: 'min-w-[120px]',
       render: (sub) => (
-        <div className="font-semibold text-slate-800 text-sm">
+        <div className="font-semibold text-slate-800 text-sm whitespace-nowrap">
           {sub.status === 'Graded' && sub.marks !== undefined ? (
             <span className="text-emerald-700 font-bold">
               {sub.marks} / {sub.assignmentId?.maxMarks || 100}
@@ -161,6 +166,7 @@ export default function StudentSubmissionsPage() {
     {
       key: 'feedback',
       header: 'Teacher Feedback',
+      className: 'min-w-[180px]',
       render: (sub) => (
         <div className="max-w-xs text-xs text-slate-700">
           {sub.teacherFeedback ? (
@@ -177,10 +183,11 @@ export default function StudentSubmissionsPage() {
     {
       key: 'actions',
       header: 'Action',
+      className: 'min-w-[140px]',
       render: (sub) => (
         <Link href={`/student/assignments/${sub.assignmentId?._id}`}>
-          <Button size="sm" variant="outline">
-            <FileText className="h-3.5 w-3.5 mr-1" />
+          <Button size="sm" variant="outline" className="whitespace-nowrap">
+            <FileText className="h-3.5 w-3.5 mr-1 shrink-0" />
             View Assignment
           </Button>
         </Link>

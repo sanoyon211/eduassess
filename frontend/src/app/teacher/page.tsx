@@ -117,7 +117,7 @@ export default function TeacherDashboardPage() {
               Manage coursework, track submission deadlines, and evaluate student submissions.
             </p>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Button variant="outline" size="sm" onClick={fetchAssignments} className="gap-1.5">
               <RefreshCw className="h-3.5 w-3.5" /> Refresh
             </Button>

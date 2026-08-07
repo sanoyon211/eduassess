@@ -87,6 +87,7 @@ export default function StudentDashboardPage() {
     {
       key: 'statusIndicator',
       header: 'Status',
+      className: 'min-w-[140px]',
       render: (a) => {
         const sub = getSubmissionForAssignment(a._id);
         const isPastDue = new Date() > new Date(a.dueDate);
@@ -129,11 +130,12 @@ export default function StudentDashboardPage() {
     {
       key: 'title',
       header: 'Assignment Title',
+      className: 'min-w-[240px]',
       render: (a) => (
         <div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <p className="font-semibold text-slate-900">{a.title}</p>
-            <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+            <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200 shrink-0">
               Max: {a.maxMarks ?? 100} pts
             </span>
           </div>
@@ -144,8 +146,9 @@ export default function StudentDashboardPage() {
     {
       key: 'courseId',
       header: 'Course Module',
+      className: 'min-w-[200px]',
       render: (a) => (
-        <span className="font-medium text-slate-800 text-xs bg-slate-100 px-2 py-1 rounded border border-slate-200">
+        <span className="inline-block font-semibold text-slate-800 text-xs bg-slate-100/90 px-2.5 py-1 rounded-md border border-slate-200/90 whitespace-nowrap">
           {a.courseId ? `${a.courseId.code} - ${a.courseId.name}` : 'N/A'}
         </span>
       ),
@@ -153,9 +156,10 @@ export default function StudentDashboardPage() {
     {
       key: 'dueDate',
       header: 'Submission Due Date',
+      className: 'min-w-[160px]',
       render: (a) => (
-        <div className="flex items-center gap-1.5 text-xs text-slate-700">
-          <Calendar className="h-3.5 w-3.5 text-slate-400" />
+        <div className="flex items-center gap-1.5 text-xs text-slate-700 whitespace-nowrap">
+          <Calendar className="h-3.5 w-3.5 text-slate-400 shrink-0" />
           <span>{format(new Date(a.dueDate), 'MMM dd, yyyy HH:mm')}</span>
         </div>
       ),
@@ -163,9 +167,10 @@ export default function StudentDashboardPage() {
     {
       key: 'actions',
       header: 'Action',
+      className: 'min-w-[130px]',
       render: (a) => (
         <Link href={`/student/assignments/${a._id}`}>
-          <Button variant="outline" size="sm" className="gap-1 text-xs">
+          <Button variant="outline" size="sm" className="gap-1 text-xs whitespace-nowrap">
             View Details <ArrowRight className="h-3.5 w-3.5" />
           </Button>
         </Link>
@@ -196,57 +201,57 @@ export default function StudentDashboardPage() {
 
         {/* Stats Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm space-y-3">
+          <div className="bg-white border border-slate-200/90 border-t-4 border-t-blue-500 rounded-xl p-5 shadow-xs card-hover space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">
                 Total Assignments
               </span>
-              <div className="h-8 w-8 rounded bg-blue-50 text-blue-700 flex items-center justify-center">
-                <FileText className="h-4 w-4" />
+              <div className="h-9 w-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                <FileText className="h-4.5 w-4.5" />
               </div>
             </div>
             {isLoading ? (
               <Skeleton className="h-8 w-20" />
             ) : (
-              <p className="text-3xl font-bold text-slate-900">{assignments.length}</p>
+              <p className="text-3xl font-extrabold text-slate-900 tracking-tight">{assignments.length}</p>
             )}
-            <p className="text-xs text-slate-500">Enrolled published coursework</p>
+            <p className="text-xs text-slate-500 font-medium">Enrolled published coursework</p>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm space-y-3">
+          <div className="bg-white border border-slate-200/90 border-t-4 border-t-amber-500 rounded-xl p-5 shadow-xs card-hover space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">
                 Pending Submissions
               </span>
-              <div className="h-8 w-8 rounded bg-amber-50 text-amber-700 flex items-center justify-center">
-                <Clock className="h-4 w-4" />
+              <div className="h-9 w-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
+                <Clock className="h-4.5 w-4.5" />
               </div>
             </div>
             {isLoading ? (
               <Skeleton className="h-8 w-20" />
             ) : (
-              <p className="text-3xl font-bold text-slate-900">
+              <p className="text-3xl font-extrabold text-slate-900 tracking-tight">
                 {pendingCount < 0 ? 0 : pendingCount}
               </p>
             )}
-            <p className="text-xs text-slate-500">Awaiting your solution</p>
+            <p className="text-xs text-slate-500 font-medium">Awaiting your solution</p>
           </div>
 
-          <div className="bg-white border border-slate-200 rounded-lg p-5 shadow-sm space-y-3">
+          <div className="bg-white border border-slate-200/90 border-t-4 border-t-emerald-500 rounded-xl p-5 shadow-xs card-hover space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+              <span className="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider">
                 Completed & Graded
               </span>
-              <div className="h-8 w-8 rounded bg-emerald-50 text-emerald-700 flex items-center justify-center">
-                <CheckCircle2 className="h-4 w-4" />
+              <div className="h-9 w-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+                <CheckCircle2 className="h-4.5 w-4.5" />
               </div>
             </div>
             {isLoading ? (
               <Skeleton className="h-8 w-20" />
             ) : (
-              <p className="text-3xl font-bold text-slate-900">{completedCount}</p>
+              <p className="text-3xl font-extrabold text-slate-900 tracking-tight">{completedCount}</p>
             )}
-            <p className="text-xs text-slate-500">Submitted coursework</p>
+            <p className="text-xs text-slate-500 font-medium">Submitted coursework</p>
           </div>
         </div>
 
@@ -258,9 +263,9 @@ export default function StudentDashboardPage() {
 
         {/* Data Table or Skeleton Loader */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <h2 className="text-lg font-bold text-slate-900">Enrolled Course Assignments</h2>
-            <div className="flex items-center gap-3 text-xs text-slate-600 font-medium">
+            <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 font-medium">
               <span className="flex items-center gap-1">
                 <span className="h-2 w-2 rounded-full bg-emerald-500 inline-block" /> Submitted / Graded
               </span>

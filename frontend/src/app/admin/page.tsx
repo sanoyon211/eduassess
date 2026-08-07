@@ -52,7 +52,7 @@ export default function AdminDashboardPage() {
               Institution metrics, user management, and course allocation.
             </p>
           </div>
-          <div className="flex items-center space-x-3">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Link href="/admin/courses">
               <Button variant="primary" size="sm" className="gap-1.5">
                 <PlusCircle className="h-4 w-4" /> Create Course

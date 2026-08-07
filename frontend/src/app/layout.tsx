@@ -1,12 +1,16 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const plusJakarta = Plus_Jakarta_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-plus-jakarta',
+});
 
 export const metadata: Metadata = {
-  title: 'EduAssess - Role-Based Assignment Management System',
+  title: 'EduAssess - Academic Assessment & Grading System',
   description: 'Enterprise academic assessment and assignment management system.',
 };
 
@@ -17,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="light" style={{ colorScheme: 'light' }}>
-      <body className={`${inter.className} min-h-screen bg-slate-50 text-slate-900 antialiased`}>
+      <body className={`${plusJakarta.className} min-h-screen bg-[#f8fafc] text-slate-900 antialiased selection:bg-indigo-500 selection:text-white`}>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

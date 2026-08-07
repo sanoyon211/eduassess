@@ -183,6 +183,7 @@ export default function TeacherSubmissionsPage() {
     {
       key: 'student',
       header: 'Student',
+      className: 'min-w-[180px]',
       render: (sub) => (
         <div>
           <div className="font-medium text-slate-900">{sub.studentId?.name || 'Unknown Student'}</div>
@@ -193,14 +194,15 @@ export default function TeacherSubmissionsPage() {
     {
       key: 'assignment',
       header: 'Assignment & Course',
+      className: 'min-w-[220px]',
       render: (sub) => {
         const course = typeof sub.assignmentId?.courseId === 'object' ? sub.assignmentId.courseId : null;
         return (
           <div>
             <div className="font-medium text-slate-900">{sub.assignmentId?.title || 'Assignment'}</div>
             {course && (
-              <span className="inline-flex items-center gap-1 text-xs text-blue-600 font-medium">
-                <BookOpen className="h-3 w-3" />
+              <span className="inline-flex items-center gap-1 text-xs text-blue-600 font-medium whitespace-nowrap mt-0.5">
+                <BookOpen className="h-3 w-3 shrink-0" />
                 {course.code} - {course.name}
               </span>
             )}
@@ -211,8 +213,9 @@ export default function TeacherSubmissionsPage() {
     {
       key: 'submittedAt',
       header: 'Submitted Date',
+      className: 'min-w-[150px]',
       render: (sub) => (
-        <span className="text-xs text-slate-600">
+        <span className="text-xs text-slate-600 whitespace-nowrap">
           {sub.submittedAt ? format(new Date(sub.submittedAt), 'MMM d, yyyy • h:mm a') : 'N/A'}
         </span>
       ),
@@ -220,14 +223,15 @@ export default function TeacherSubmissionsPage() {
     {
       key: 'file',
       header: 'File Link',
+      className: 'min-w-[130px]',
       render: (sub) => (
         <a
           href={sub.fileUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 hover:underline font-medium"
+          className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 hover:underline font-medium whitespace-nowrap"
         >
-          <ExternalLink className="h-3.5 w-3.5 mr-1" />
+          <ExternalLink className="h-3.5 w-3.5 mr-1 shrink-0" />
           View Submission
         </a>
       ),
@@ -235,6 +239,7 @@ export default function TeacherSubmissionsPage() {
     {
       key: 'status',
       header: 'Status',
+      className: 'min-w-[110px]',
       render: (sub) => (
         <Badge variant={sub.status === 'Graded' ? 'success' : 'warning'}>
           {sub.status === 'Graded' ? (
@@ -249,8 +254,9 @@ export default function TeacherSubmissionsPage() {
     {
       key: 'marks',
       header: 'Marks',
+      className: 'min-w-[110px]',
       render: (sub) => (
-        <div className="font-semibold text-slate-800 text-sm">
+        <div className="font-semibold text-slate-800 text-sm whitespace-nowrap">
           {sub.status === 'Graded' && sub.marks !== undefined ? (
             <span>
               {sub.marks} / {sub.assignmentId?.maxMarks || 100}
@@ -264,13 +270,15 @@ export default function TeacherSubmissionsPage() {
     {
       key: 'actions',
       header: 'Action',
+      className: 'min-w-[130px]',
       render: (sub) => (
         <Button
           size="sm"
           variant={sub.status === 'Graded' ? 'outline' : 'primary'}
           onClick={() => openGradeModal(sub)}
+          className="whitespace-nowrap"
         >
-          <Award className="h-3.5 w-3.5 mr-1" />
+          <Award className="h-3.5 w-3.5 mr-1 shrink-0" />
           {sub.status === 'Graded' ? 'Update Grade' : 'Grade Now'}
         </Button>
       ),
