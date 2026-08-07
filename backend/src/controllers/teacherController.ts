@@ -95,6 +95,33 @@ export const getMyAssignments = async (
 };
 
 /**
+ * @desc    Get all courses assigned to the logged-in teacher
+ * @route   GET /api/teacher/courses
+ * @access  Private (Teacher)
+ */
+export const getMyCourses = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const teacherId = req.user?.userId;
+
+    const courses = await Course.find({ assignedTeacherId: teacherId })
+      .populate('enrolledStudentIds', 'name email')
+      .sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      count: courses.length,
+      data: courses,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
  * @desc    Update an assignment (with strict IDOR protection)
  * @route   PATCH /api/teacher/assignments/:id
  * @access  Private (Teacher)

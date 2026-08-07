@@ -2,6 +2,7 @@ import { Router } from 'express';
 import {
   createAssignment,
   getMyAssignments,
+  getMyCourses,
   updateAssignment,
   getAssignmentSubmissions,
   gradeSubmission,
@@ -15,7 +16,8 @@ const router = Router();
 router.use(verifyToken);
 router.use(authorizeRoles(UserRole.TEACHER));
 
-// Assignment Management Routes
+// Course & Assignment Management Routes
+router.get('/courses', getMyCourses);
 router.post('/assignments', createAssignment);
 router.get('/assignments', getMyAssignments);
 router.patch('/assignments/:id', updateAssignment);

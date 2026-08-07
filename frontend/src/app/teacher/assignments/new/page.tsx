@@ -41,21 +41,12 @@ export default function NewAssignmentPage() {
     const fetchCourses = async () => {
       setIsLoadingCourses(true);
       try {
-        const response = await api.get('/admin/courses');
-        const allCourses: CourseOption[] = response.data.data || [];
+        const response = await api.get('/teacher/courses');
+        const teacherCourses: CourseOption[] = response.data.data || [];
 
-        // Filter courses where assignedTeacherId matches current user ID
-        const teacherCourses = allCourses.filter((c) => {
-          const tId = typeof c.assignedTeacherId === 'object' ? c.assignedTeacherId?._id : c.assignedTeacherId;
-          return tId === user?._id;
-        });
-
-        // If no filtered course (e.g. admin seeded test), show all courses
-        setCourses(teacherCourses.length > 0 ? teacherCourses : allCourses);
+        setCourses(teacherCourses);
         if (teacherCourses.length > 0) {
           setCourseId(teacherCourses[0]._id);
-        } else if (allCourses.length > 0) {
-          setCourseId(allCourses[0]._id);
         }
       } catch (err) {
         console.error('[NewAssignment] Failed to fetch courses:', err);

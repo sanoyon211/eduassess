@@ -167,18 +167,21 @@ export default function AdminCoursesPage() {
     {
       key: 'code',
       header: 'Course Code',
-      render: (c) => <span className="font-mono font-bold text-slate-900">{c.code}</span>,
+      className: 'min-w-[130px]',
+      render: (c) => <span className="font-mono font-bold text-slate-900 whitespace-nowrap">{c.code}</span>,
     },
     {
       key: 'name',
       header: 'Course Name',
+      className: 'min-w-[200px]',
       render: (c) => <span className="font-semibold text-slate-900">{c.name}</span>,
     },
     {
       key: 'assignedTeacherId',
       header: 'Assigned Teacher',
+      className: 'min-w-[180px]',
       render: (c) => (
-        <span className="text-slate-800 text-sm font-medium">
+        <span className="text-slate-800 text-sm font-medium whitespace-nowrap">
           {c.assignedTeacherId ? c.assignedTeacherId.name : 'Unassigned'}
         </span>
       ),
@@ -186,21 +189,25 @@ export default function AdminCoursesPage() {
     {
       key: 'enrolledStudentIds',
       header: 'Enrolled Students',
+      className: 'min-w-[140px]',
       render: (c) => (
-        <Badge variant="info">{c.enrolledStudentIds ? c.enrolledStudentIds.length : 0} Students</Badge>
+        <Badge variant="info" className="whitespace-nowrap">
+          {c.enrolledStudentIds ? c.enrolledStudentIds.length : 0} Students
+        </Badge>
       ),
     },
     {
       key: 'actions',
       header: 'Actions',
+      className: 'min-w-[150px]',
       render: (c) => (
         <Button
           variant="outline"
           size="sm"
           onClick={() => openEnrollModal(c)}
-          className="gap-1 text-xs"
+          className="gap-1 text-xs whitespace-nowrap"
         >
-          <UserPlus className="h-3.5 w-3.5" /> Enroll Students
+          <UserPlus className="h-3.5 w-3.5 shrink-0" /> Enroll Students
         </Button>
       ),
     },

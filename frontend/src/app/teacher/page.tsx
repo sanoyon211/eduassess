@@ -51,6 +51,7 @@ export default function TeacherDashboardPage() {
     {
       key: 'title',
       header: 'Assignment Title',
+      className: 'min-w-[240px]',
       render: (a) => (
         <div>
           <p className="font-semibold text-slate-900">{a.title}</p>
@@ -61,8 +62,9 @@ export default function TeacherDashboardPage() {
     {
       key: 'courseId',
       header: 'Course Module',
+      className: 'min-w-[200px]',
       render: (a) => (
-        <span className="font-medium text-slate-800 text-xs bg-slate-100 px-2 py-1 rounded border border-slate-200">
+        <span className="inline-block font-semibold text-slate-800 text-xs bg-slate-100/90 px-2.5 py-1 rounded-md border border-slate-200/90 whitespace-nowrap">
           {a.courseId ? `${a.courseId.code} - ${a.courseId.name}` : 'N/A'}
         </span>
       ),
@@ -70,13 +72,14 @@ export default function TeacherDashboardPage() {
     {
       key: 'dueDate',
       header: 'Due Date',
+      className: 'min-w-[160px]',
       render: (a) => {
         const isPassed = new Date() > new Date(a.dueDate);
         return (
-          <div className="flex items-center gap-1.5 text-xs text-slate-700">
-            <Calendar className="h-3.5 w-3.5 text-slate-400" />
+          <div className="flex items-center gap-1.5 text-xs text-slate-700 whitespace-nowrap">
+            <Calendar className="h-3.5 w-3.5 text-slate-400 shrink-0" />
             <span>{format(new Date(a.dueDate), 'MMM dd, yyyy HH:mm')}</span>
-            {isPassed && <span className="text-[10px] text-red-600 font-bold px-1 bg-red-50 rounded">Past Due</span>}
+            {isPassed && <span className="text-[10px] text-red-600 font-bold px-1 bg-red-50 rounded shrink-0">Past Due</span>}
           </div>
         );
       },
@@ -84,6 +87,7 @@ export default function TeacherDashboardPage() {
     {
       key: 'status',
       header: 'Status',
+      className: 'min-w-[110px]',
       render: (a) =>
         a.status === 'Published' ? (
           <Badge variant="success">Published</Badge>
@@ -94,10 +98,11 @@ export default function TeacherDashboardPage() {
     {
       key: 'actions',
       header: 'Actions',
+      className: 'min-w-[160px]',
       render: (a) => (
         <Link href={`/teacher/assignments/${a._id}`}>
-          <Button variant="outline" size="sm" className="gap-1 text-xs">
-            <Eye className="h-3.5 w-3.5" /> View Submissions
+          <Button variant="outline" size="sm" className="gap-1 text-xs whitespace-nowrap">
+            <Eye className="h-3.5 w-3.5 shrink-0" /> View Submissions
           </Button>
         </Link>
       ),

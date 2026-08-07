@@ -65,16 +65,19 @@ export default function AdminUsersPage() {
     {
       key: 'name',
       header: 'User Name',
-      render: (u) => <span className="font-semibold text-slate-900">{u.name}</span>,
+      className: 'min-w-[180px]',
+      render: (u) => <span className="font-semibold text-slate-900 whitespace-nowrap">{u.name}</span>,
     },
     {
       key: 'email',
       header: 'Email Address',
-      render: (u) => <span className="text-slate-600 font-mono text-xs">{u.email}</span>,
+      className: 'min-w-[200px]',
+      render: (u) => <span className="text-slate-600 font-mono text-xs whitespace-nowrap">{u.email}</span>,
     },
     {
       key: 'role',
       header: 'Assigned Role',
+      className: 'min-w-[120px]',
       render: (u) => {
         switch (u.role) {
           case 'Admin':
@@ -91,8 +94,9 @@ export default function AdminUsersPage() {
     {
       key: 'createdAt',
       header: 'Joined Date',
+      className: 'min-w-[140px]',
       render: (u) => (
-        <span className="text-slate-500 text-xs">
+        <span className="text-slate-500 text-xs whitespace-nowrap">
           {u.createdAt ? format(new Date(u.createdAt), 'MMM dd, yyyy') : 'N/A'}
         </span>
       ),

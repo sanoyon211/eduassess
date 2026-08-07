@@ -72,15 +72,13 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const navItems = getNavItems();
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-white border-r border-slate-200/80 w-64 shadow-xl lg:shadow-none select-none">
+    <div className="flex flex-col h-full bg-white border-r border-slate-200 w-64 shadow-xl lg:shadow-none select-none">
       {/* Role Header Banner */}
       <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-        <div className="flex items-center space-x-2 text-slate-800">
-          <div className="p-1.5 rounded-lg bg-indigo-50 text-indigo-700 border border-indigo-100">
-            <GraduationCap className="h-4 w-4" />
-          </div>
+        <div className="flex items-center space-x-2 text-slate-700">
+          <GraduationCap className="h-4 w-4 text-blue-600" />
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider block leading-tight text-slate-800">
+            <span className="text-xs font-semibold uppercase tracking-wider block leading-tight text-slate-800">
               {user?.role || 'Guest'} Portal
             </span>
             <span className="text-[10px] text-slate-500 font-medium block leading-none">
@@ -93,7 +91,7 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         {onClose && (
           <button
             onClick={onClose}
-            className="lg:hidden text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+            className="lg:hidden text-slate-400 hover:text-slate-700 p-1.5 rounded-md hover:bg-slate-100 transition-colors"
             aria-label="Close Navigation Sidebar"
           >
             <X className="h-5 w-5" />
@@ -112,13 +110,13 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
               key={item.href}
               href={item.href}
               onClick={onClose}
-              className={`flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
+              className={`flex items-center space-x-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-indigo-50/80 text-indigo-700 font-bold border-r-2 border-indigo-600'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                  ? 'bg-blue-50 text-blue-700 font-semibold border-r-2 border-blue-600'
+                  : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
-              <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
+              <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-500'}`} />
               <span className="truncate">{item.label}</span>
             </Link>
           );
@@ -126,7 +124,7 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       </nav>
 
       {/* Footer Profile Mini Summary */}
-      <div className="p-3 m-3 bg-slate-50 rounded-xl border border-slate-200/80 flex items-center space-x-2 text-xs">
+      <div className="p-3 m-3 bg-slate-50 rounded-md border border-slate-200 flex items-center space-x-2 text-xs">
         <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
         <div className="min-w-0 flex-1">
           <p className="font-semibold text-slate-800 truncate">{user?.name || 'Active User'}</p>
@@ -138,8 +136,8 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Desktop Sidebar (Fixed) */}
-      <aside className="hidden lg:block w-64 shrink-0 min-h-[calc(100vh-4rem)]">
+      {/* Desktop Sidebar (Sticky) */}
+      <aside className="hidden lg:block w-64 shrink-0 sticky top-16 h-[calc(100vh-4rem)] self-start overflow-hidden">
         {sidebarContent}
       </aside>
 
