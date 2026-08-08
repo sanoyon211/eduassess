@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -9,148 +9,198 @@ import {
   Users,
   BookOpen,
   FileText,
-  FileCheck,
-  CheckCircle,
-  GraduationCap,
+  CheckSquare,
   X,
-  ShieldCheck,
+  Shield,
+  GraduationCap,
+  UserCheck,
+  ChevronRight,
 } from 'lucide-react';
-
-interface NavItem {
-  label: string;
-  href: string;
-  icon: React.ElementType;
-}
 
 interface SidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
 }
 
+interface NavItem {
+  label: string;
+  href: string;
+  icon: React.ComponentType<{ className?: string }>;
+  description?: string;
+}
+
 export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const pathname = usePathname();
   const { user } = useAuth();
 
-  // Auto close drawer when route changes on mobile
-  useEffect(() => {
-    if (onClose) {
-      onClose();
-    }
-  }, [pathname]);
-
-  const adminNavItems: NavItem[] = [
-    { label: 'Overview', href: '/admin', icon: LayoutDashboard },
-    { label: 'Manage Users', href: '/admin/users', icon: Users },
-    { label: 'Manage Courses', href: '/admin/courses', icon: BookOpen },
-  ];
-
-  const teacherNavItems: NavItem[] = [
-    { label: 'Overview', href: '/teacher', icon: LayoutDashboard },
-    { label: 'My Assignments', href: '/teacher/assignments', icon: FileText },
-    { label: 'Grade Submissions', href: '/teacher/submissions', icon: FileCheck },
-  ];
-
-  const studentNavItems: NavItem[] = [
-    { label: 'Overview', href: '/student', icon: LayoutDashboard },
-    { label: 'Course Assignments', href: '/student/assignments', icon: FileText },
-    { label: 'My Submissions', href: '/student/submissions', icon: CheckCircle },
-  ];
-
-  const getNavItems = (): NavItem[] => {
+  const getRoleNavItems = (): { section: string; items: NavItem[] }[] => {
     switch (user?.role) {
       case 'Admin':
-        return adminNavItems;
+        return [
+          {
+            section: 'Administration',
+            items: [
+              { label: 'Dashboard', href: '/admin', icon: LayoutDashboard, description: 'Overview & metrics' },
+              { label: 'Users', href: '/admin/users', icon: Users, description: 'Manage accounts & roles' },
+              { label: 'Courses', href: '/admin/courses', icon: BookOpen, description: 'Course allocations' },
+            ],
+          },
+        ];
       case 'Teacher':
-        return teacherNavItems;
+        return [
+          {
+            section: 'Teaching',
+            items: [
+              { label: 'Dashboard', href: '/teacher', icon: LayoutDashboard, description: 'Overview & status' },
+              { label: 'Assignments', href: '/teacher/assignments', icon: FileText, description: 'Create & manage tasks' },
+              { label: 'Submissions', href: '/teacher/submissions', icon: CheckSquare, description: 'Grade student work' },
+            ],
+          },
+        ];
       case 'Student':
-        return studentNavItems;
+        return [
+          {
+            section: 'Learning',
+            items: [
+              { label: 'Dashboard', href: '/student', icon: LayoutDashboard, description: 'Academic overview' },
+              { label: 'Assignments', href: '/student/assignments', icon: FileText, description: 'View & submit tasks' },
+              { label: 'My Submissions', href: '/student/submissions', icon: CheckSquare, description: 'Track grades & feedback' },
+            ],
+          },
+        ];
       default:
-        return [];
+        return [
+          {
+            section: 'Portal',
+            items: [
+              { label: 'Dashboard', href: '/', icon: LayoutDashboard, description: 'Main portal' },
+            ],
+          },
+        ];
     }
   };
 
-  const navItems = getNavItems();
+  const navSections = getRoleNavItems();
+
+  const getRoleIcon = (role?: string) => {
+    switch (role) {
+      case 'Admin':
+        return <Shield className="h-4 w-4 text-slate-800" />;
+      case 'Teacher':
+        return <GraduationCap className="h-4 w-4 text-emerald-700" />;
+      case 'Student':
+        return <UserCheck className="h-4 w-4 text-blue-700" />;
+      default:
+        return <LayoutDashboard className="h-4 w-4 text-slate-600" />;
+    }
+  };
 
   const sidebarContent = (
-    <div className="flex flex-col h-full bg-white border-r border-slate-200 w-64 shadow-xl lg:shadow-none select-none">
-      {/* Role Header Banner */}
-      <div className="p-4 border-b border-slate-100 bg-slate-50/50 flex items-center justify-between">
-        <div className="flex items-center space-x-2 text-slate-700">
-          <GraduationCap className="h-4 w-4 text-blue-600" />
+    <aside className="w-64 bg-white border border-slate-200/90 rounded-2xl shadow-xl flex flex-col h-full overflow-hidden shrink-0">
+      {/* Sidebar Header */}
+      <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+        <div className="flex items-center space-x-2.5">
+          <div className="p-2 rounded-xl bg-slate-100 border border-slate-200/80">
+            {getRoleIcon(user?.role)}
+          </div>
           <div>
-            <span className="text-xs font-semibold uppercase tracking-wider block leading-tight text-slate-800">
-              {user?.role || 'Guest'} Portal
-            </span>
-            <span className="text-[10px] text-slate-500 font-medium block leading-none">
-              Authenticated Session
-            </span>
+            <h2 className="text-sm font-bold text-slate-900 leading-tight">Navigation</h2>
+            <p className="text-[11px] text-slate-500 font-medium">{user?.role || 'Guest'} Portal</p>
           </div>
         </div>
 
-        {/* Mobile Close Button */}
         {onClose && (
           <button
             onClick={onClose}
-            className="lg:hidden text-slate-400 hover:text-slate-700 p-1.5 rounded-md hover:bg-slate-100 transition-colors"
-            aria-label="Close Navigation Sidebar"
+            className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            aria-label="Close sidebar"
           >
             <X className="h-5 w-5" />
           </button>
         )}
       </div>
 
-      {/* Navigation List */}
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href + '/'));
+      {/* Navigation Groups */}
+      <div className="flex-1 overflow-y-auto p-3 space-y-6 min-h-0">
+        {navSections.map((group, idx) => (
+          <div key={idx} className="space-y-1.5">
+            <h3 className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              {group.section}
+            </h3>
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onClose}
-              className={`flex items-center space-x-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
-                isActive
-                  ? 'bg-blue-50 text-blue-700 font-semibold border-r-2 border-blue-600'
-                  : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900'
-              }`}
-            >
-              <Icon className={`h-4 w-4 shrink-0 ${isActive ? 'text-blue-600' : 'text-slate-500'}`} />
-              <span className="truncate">{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
+            <nav className="space-y-1">
+              {group.items.map((item) => {
+                const Icon = item.icon;
+                const isActive = pathname === item.href || (item.href !== '/' && pathname?.startsWith(item.href));
 
-      {/* Footer Profile Mini Summary */}
-      <div className="p-3 m-3 bg-slate-50 rounded-md border border-slate-200 flex items-center space-x-2 text-xs">
-        <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-        <div className="min-w-0 flex-1">
-          <p className="font-semibold text-slate-800 truncate">{user?.name || 'Active User'}</p>
-          <p className="text-[10px] text-slate-500 truncate">{user?.email || 'Secured Token'}</p>
-        </div>
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => onClose && onClose()}
+                    className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
+                      isActive
+                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
+                        : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                    }`}
+                  >
+                    <div className="flex items-center space-x-3 min-w-0">
+                      <Icon
+                        className={`h-4 w-4 shrink-0 transition-colors ${
+                          isActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-700'
+                        }`}
+                      />
+                      <div className="truncate">
+                        <span className="block truncate">{item.label}</span>
+                      </div>
+                    </div>
+
+                    <ChevronRight
+                      className={`h-3.5 w-3.5 shrink-0 transition-transform duration-150 ${
+                        isActive
+                          ? 'text-white/80 translate-x-0.5'
+                          : 'text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5'
+                      }`}
+                    />
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+        ))}
       </div>
-    </div>
+
+      {/* Sidebar Footer */}
+      {user && (
+        <div className="p-3 border-t border-slate-100 bg-slate-50/50">
+          <div className="px-3 py-2 rounded-xl bg-white border border-slate-200/70 text-xs">
+            <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">
+              Logged in as
+            </span>
+            <p className="font-bold text-slate-800 truncate">{user.name}</p>
+            <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
+          </div>
+        </div>
+      )}
+    </aside>
   );
 
   return (
     <>
-      {/* Desktop Sidebar (Sticky) */}
-      <aside className="hidden lg:block w-64 shrink-0 sticky top-16 h-[calc(100vh-4rem)] self-start overflow-hidden">
-        {sidebarContent}
-      </aside>
+      {/* Desktop Sidebar (visible on lg screens and up) */}
+      <div className="hidden lg:block h-full">{sidebarContent}</div>
 
-      {/* Mobile Drawer (Slide-Over) */}
+      {/* Mobile Drawer (visible on smaller screens when isOpen is true) */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          {/* Backdrop Blur */}
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          {/* Backdrop overlay */}
           <div
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity"
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity"
             onClick={onClose}
           />
-          {/* Slide Drawer */}
-          <div className="fixed inset-y-0 left-0 z-50 max-w-full flex animate-in slide-in-from-left duration-200">
+
+          {/* Drawer Container */}
+          <div className="relative z-10 p-3 h-full max-w-[280px] w-full">
             {sidebarContent}
           </div>
         </div>
