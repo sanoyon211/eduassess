@@ -186,8 +186,8 @@ export default function TeacherSubmissionsPage() {
       className: 'min-w-[180px]',
       render: (sub) => (
         <div>
-          <div className="font-medium text-slate-900">{sub.studentId?.name || 'Unknown Student'}</div>
-          <div className="text-xs text-slate-500">{sub.studentId?.email || 'N/A'}</div>
+          <div className="font-semibold text-gray-900">{sub.studentId?.name || 'Unknown Student'}</div>
+          <div className="text-[11px] font-mono text-gray-500 mt-0.5">{sub.studentId?.email || 'N/A'}</div>
         </div>
       ),
     },
@@ -199,9 +199,9 @@ export default function TeacherSubmissionsPage() {
         const course = typeof sub.assignmentId?.courseId === 'object' ? sub.assignmentId.courseId : null;
         return (
           <div>
-            <div className="font-medium text-slate-900">{sub.assignmentId?.title || 'Assignment'}</div>
+            <div className="font-medium text-gray-900">{sub.assignmentId?.title || 'Assignment'}</div>
             {course && (
-              <span className="inline-flex items-center gap-1 text-xs text-blue-600 font-medium whitespace-nowrap mt-0.5">
+              <span className="inline-flex items-center gap-1.5 text-[11px] text-brand-600 font-medium whitespace-nowrap mt-1 bg-brand-50 px-2 py-0.5 rounded-md border border-brand-100">
                 <BookOpen className="h-3 w-3 shrink-0" />
                 {course.code} - {course.name}
               </span>
@@ -215,7 +215,7 @@ export default function TeacherSubmissionsPage() {
       header: 'Submitted Date',
       className: 'min-w-[150px]',
       render: (sub) => (
-        <span className="text-xs text-slate-600 whitespace-nowrap">
+        <span className="text-xs font-medium text-gray-600 whitespace-nowrap">
           {sub.submittedAt ? format(new Date(sub.submittedAt), 'MMM d, yyyy • h:mm a') : 'N/A'}
         </span>
       ),
@@ -229,10 +229,9 @@ export default function TeacherSubmissionsPage() {
           href={sub.fileUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center text-xs text-blue-600 hover:text-blue-800 hover:underline font-medium whitespace-nowrap"
+          className="inline-flex items-center gap-1 text-xs text-brand-600 hover:text-brand-800 hover:underline font-semibold whitespace-nowrap transition-colors"
         >
-          <ExternalLink className="h-3.5 w-3.5 mr-1 shrink-0" />
-          View Submission
+          View Solution <ExternalLink className="h-3.5 w-3.5 shrink-0" />
         </a>
       ),
     },
@@ -256,13 +255,13 @@ export default function TeacherSubmissionsPage() {
       header: 'Marks',
       className: 'min-w-[110px]',
       render: (sub) => (
-        <div className="font-semibold text-slate-800 text-sm whitespace-nowrap">
+        <div className="font-semibold text-gray-900 text-sm whitespace-nowrap">
           {sub.status === 'Graded' && sub.marks !== undefined ? (
-            <span>
-              {sub.marks} / {sub.assignmentId?.maxMarks || 100}
+            <span className="bg-gray-50 px-2 py-1 rounded-md border border-gray-200/80">
+              {sub.marks} <span className="text-gray-400 font-medium text-xs">/ {sub.assignmentId?.maxMarks || 100}</span>
             </span>
           ) : (
-            <span className="text-slate-400 font-normal italic">Ungraded</span>
+            <span className="text-gray-400 font-medium text-xs px-2">-</span>
           )}
         </div>
       ),
@@ -276,9 +275,9 @@ export default function TeacherSubmissionsPage() {
           size="sm"
           variant={sub.status === 'Graded' ? 'outline' : 'primary'}
           onClick={() => openGradeModal(sub)}
-          className="whitespace-nowrap"
+          className="whitespace-nowrap gap-1.5 text-xs shadow-sm"
         >
-          <Award className="h-3.5 w-3.5 mr-1 shrink-0" />
+          <Award className="h-3.5 w-3.5 shrink-0" />
           {sub.status === 'Graded' ? 'Update Grade' : 'Grade Now'}
         </Button>
       ),
@@ -289,50 +288,49 @@ export default function TeacherSubmissionsPage() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-lg border border-slate-200 shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-              <FileCheck className="h-7 w-7 text-blue-600" />
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
+              <FileCheck className="h-6 w-6 text-accent-600" />
               Grade Student Submissions
             </h1>
-            <p className="text-slate-500 text-sm mt-1">
+            <p className="text-gray-500 text-sm mt-1">
               Review, evaluate, and provide feedback on student assignment submissions.
             </p>
           </div>
         </div>
 
         {error && (
-          <div className="p-4 bg-red-50 border border-red-200 text-red-700 text-sm rounded-md">
+          <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium rounded-xl shadow-sm">
             {error}
           </div>
         )}
 
-        {/* Filters Bar */}
-        <div className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm flex flex-col md:flex-row gap-4 justify-between items-center">
+        {/* Filters Bar - Premium SaaS Card Style */}
+        <div className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm flex flex-col lg:flex-row gap-4 justify-between items-center transition-all">
           {/* Search */}
-          <div className="relative w-full md:w-72">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
-            <input
-              type="text"
+          <div className="relative w-full lg:max-w-md">
+            <Search className="absolute left-3.5 top-3 h-4.5 w-4.5 text-gray-400" />
+            <Input
               placeholder="Search student or assignment..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 border border-slate-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="pl-10"
             />
           </div>
 
           {/* Filters */}
-          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto">
+          <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
             {/* Status Tabs */}
-            <div className="flex items-center bg-slate-100 p-1 rounded-md text-xs font-medium text-slate-600">
+            <div className="flex items-center bg-gray-50 p-1 rounded-xl border border-gray-200/60 text-xs font-medium text-gray-600">
               {(['All', 'Pending', 'Graded'] as const).map((st) => (
                 <button
                   key={st}
                   onClick={() => setStatusFilter(st)}
-                  className={`px-3 py-1.5 rounded-md transition-colors ${
+                  className={`px-3.5 py-1.5 rounded-lg transition-all duration-200 ${
                     statusFilter === st
-                      ? 'bg-white text-slate-900 shadow-sm font-semibold'
-                      : 'hover:text-slate-900'
+                      ? 'bg-white text-brand-700 shadow-sm border border-gray-200/50 font-bold'
+                      : 'hover:text-gray-900 hover:bg-gray-100/50 border border-transparent'
                   }`}
                 >
                   {st}
@@ -342,20 +340,22 @@ export default function TeacherSubmissionsPage() {
 
             {/* Assignment Dropdown */}
             {assignments.length > 0 && (
-              <div className="flex items-center gap-1.5 text-xs text-slate-600">
-                <Filter className="h-3.5 w-3.5 text-slate-400" />
-                <select
-                  value={assignmentFilter}
-                  onChange={(e) => setAssignmentFilter(e.target.value)}
-                  className="border border-slate-300 bg-white py-1.5 px-2.5 rounded-md text-xs text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="All">All Assignments</option>
-                  {assignments.map((a) => (
-                    <option key={a._id} value={a._id}>
-                      {a.title}
-                    </option>
-                  ))}
-                </select>
+              <div className="flex items-center gap-2 text-xs text-gray-600">
+                <div className="relative">
+                  <Filter className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                  <select
+                    value={assignmentFilter}
+                    onChange={(e) => setAssignmentFilter(e.target.value)}
+                    className="pl-9 pr-8 py-2.5 bg-white border border-gray-200 rounded-xl text-xs text-gray-700 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 shadow-sm appearance-none cursor-pointer"
+                  >
+                    <option value="All">All Assignments</option>
+                    {assignments.map((a) => (
+                      <option key={a._id} value={a._id}>
+                        {a.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             )}
           </div>
@@ -363,7 +363,7 @@ export default function TeacherSubmissionsPage() {
 
         {/* Data Table */}
         {isLoading ? (
-          <TableSkeleton rows={5} />
+          <TableSkeleton rows={5} cols={7} />
         ) : (
           <DataTable
             columns={columns}
@@ -374,55 +374,54 @@ export default function TeacherSubmissionsPage() {
 
         {/* Grade Modal */}
         {isGradeModalOpen && selectedSubmission && (
-          <div className="fixed inset-0 z-50 bg-slate-900/50 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-lg overflow-hidden border border-slate-200">
-              <div className="flex justify-between items-center px-6 py-4 border-b border-slate-200 bg-slate-50">
-                <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
-                  <Award className="h-5 w-5 text-blue-600" />
+          <div className="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div className="bg-white rounded-2xl shadow-xl w-full max-w-lg overflow-hidden border border-gray-200">
+              <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                  <Award className="h-5 w-5 text-accent-600" />
                   Evaluate Submission
                 </h3>
                 <button
                   onClick={() => setIsGradeModalOpen(false)}
-                  className="text-slate-400 hover:text-slate-600 transition-colors"
+                  className="text-gray-400 hover:text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 p-1.5 rounded-lg transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <form onSubmit={handleGradeSubmit} className="p-6 space-y-4">
+              <form onSubmit={handleGradeSubmit} className="p-6 space-y-5">
                 {modalError && (
-                  <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs rounded-md">
+                  <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium rounded-xl shadow-sm">
                     {modalError}
                   </div>
                 )}
 
-                <div className="bg-slate-50 p-3 rounded-md border border-slate-200 text-xs space-y-1">
-                  <div>
-                    <span className="font-semibold text-slate-700">Student:</span>{' '}
-                    {selectedSubmission.studentId?.name} ({selectedSubmission.studentId?.email})
+                <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 text-xs space-y-2 shadow-inner">
+                  <div className="flex items-start">
+                    <span className="font-semibold text-gray-700 w-24 shrink-0">Student:</span>
+                    <span className="text-gray-900">{selectedSubmission.studentId?.name} <span className="text-gray-500 font-mono">({selectedSubmission.studentId?.email})</span></span>
                   </div>
-                  <div>
-                    <span className="font-semibold text-slate-700">Assignment:</span>{' '}
-                    {selectedSubmission.assignmentId?.title}
+                  <div className="flex items-start">
+                    <span className="font-semibold text-gray-700 w-24 shrink-0">Assignment:</span>
+                    <span className="text-gray-900">{selectedSubmission.assignmentId?.title}</span>
                   </div>
-                  <div>
-                    <span className="font-semibold text-slate-700">Max Marks:</span>{' '}
-                    {selectedSubmission.assignmentId?.maxMarks || 100}
+                  <div className="flex items-start">
+                    <span className="font-semibold text-gray-700 w-24 shrink-0">Max Marks:</span>
+                    <span className="text-gray-900 font-bold">{selectedSubmission.assignmentId?.maxMarks || 100}</span>
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                  <label className="block text-sm font-semibold text-gray-700 mb-1.5">
                     Submitted File
                   </label>
                   <a
                     href={selectedSubmission.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center text-xs text-blue-600 hover:underline font-medium"
+                    className="inline-flex items-center gap-1.5 text-sm text-brand-600 hover:text-brand-700 hover:underline font-medium transition-all"
                   >
-                    <ExternalLink className="h-3.5 w-3.5 mr-1" />
-                    Open Submission Document
+                    Open Submission Document <ExternalLink className="h-4 w-4" />
                   </a>
                 </div>
 
@@ -437,8 +436,8 @@ export default function TeacherSubmissionsPage() {
                   placeholder="Enter numerical score"
                 />
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-semibold text-gray-700">
                     Teacher Feedback (Optional)
                   </label>
                   <textarea
@@ -446,11 +445,11 @@ export default function TeacherSubmissionsPage() {
                     value={feedback}
                     onChange={(e) => setFeedback(e.target.value)}
                     placeholder="Write detailed constructive feedback for the student..."
-                    className="w-full p-2.5 text-xs border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full px-4 py-3 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all duration-200 shadow-sm"
                   />
                 </div>
 
-                <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
+                <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-2">
                   <Button
                     type="button"
                     variant="outline"
@@ -459,8 +458,8 @@ export default function TeacherSubmissionsPage() {
                   >
                     Cancel
                   </Button>
-                  <Button type="submit" isLoading={isSubmittingGrade}>
-                    Submit Evaluation
+                  <Button type="submit" isLoading={isSubmittingGrade} className="gap-1.5">
+                    <CheckCircle2 className="h-4 w-4" /> Submit Evaluation
                   </Button>
                 </div>
               </form>

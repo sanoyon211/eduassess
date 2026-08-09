@@ -85,34 +85,34 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
   const getRoleIcon = (role?: string) => {
     switch (role) {
       case 'Admin':
-        return <Shield className="h-4 w-4 text-slate-800" />;
+        return <Shield className="h-4 w-4 text-brand-700" />;
       case 'Teacher':
-        return <GraduationCap className="h-4 w-4 text-emerald-700" />;
+        return <GraduationCap className="h-4 w-4 text-accent-600" />;
       case 'Student':
-        return <UserCheck className="h-4 w-4 text-blue-700" />;
+        return <UserCheck className="h-4 w-4 text-brand-500" />;
       default:
-        return <LayoutDashboard className="h-4 w-4 text-slate-600" />;
+        return <LayoutDashboard className="h-4 w-4 text-gray-500" />;
     }
   };
 
   const sidebarContent = (
-    <aside className="w-64 bg-white border border-slate-200/90 rounded-2xl shadow-xl flex flex-col h-full overflow-hidden shrink-0">
+    <aside className="w-64 bg-white border border-gray-200 rounded-2xl shadow-soft flex flex-col h-full overflow-hidden shrink-0">
       {/* Sidebar Header */}
-      <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+      <div className="p-4 border-b border-gray-100 flex items-center justify-between">
         <div className="flex items-center space-x-2.5">
-          <div className="p-2 rounded-xl bg-slate-100 border border-slate-200/80">
+          <div className="p-2 rounded-xl bg-gray-50 border border-gray-200">
             {getRoleIcon(user?.role)}
           </div>
           <div>
-            <h2 className="text-sm font-bold text-slate-900 leading-tight">Navigation</h2>
-            <p className="text-[11px] text-slate-500 font-medium">{user?.role || 'Guest'} Portal</p>
+            <h2 className="text-sm font-bold text-gray-900 leading-tight">Navigation</h2>
+            <p className="text-[11px] text-gray-500 font-medium">{user?.role || 'Guest'} Portal</p>
           </div>
         </div>
 
         {onClose && (
           <button
             onClick={onClose}
-            className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            className="lg:hidden p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors"
             aria-label="Close sidebar"
           >
             <X className="h-5 w-5" />
@@ -124,7 +124,7 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
       <div className="flex-1 overflow-y-auto p-3 space-y-6 min-h-0">
         {navSections.map((group, idx) => (
           <div key={idx} className="space-y-1.5">
-            <h3 className="px-3 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            <h3 className="px-3 text-[10px] font-bold text-gray-400 uppercase tracking-wider">
               {group.section}
             </h3>
 
@@ -138,16 +138,16 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     key={item.href}
                     href={item.href}
                     onClick={() => onClose && onClose()}
-                    className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 ${
+                    className={`group relative flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
                       isActive
-                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                        : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-900'
+                        ? 'bg-brand-600 text-white shadow-md shadow-brand-500/20'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                     }`}
                   >
                     <div className="flex items-center space-x-3 min-w-0">
                       <Icon
                         className={`h-4 w-4 shrink-0 transition-colors ${
-                          isActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-700'
+                          isActive ? 'text-white' : 'text-gray-400 group-hover:text-gray-700'
                         }`}
                       />
                       <div className="truncate">
@@ -156,10 +156,10 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
                     </div>
 
                     <ChevronRight
-                      className={`h-3.5 w-3.5 shrink-0 transition-transform duration-150 ${
+                      className={`h-3.5 w-3.5 shrink-0 transition-transform duration-200 ${
                         isActive
                           ? 'text-white/80 translate-x-0.5'
-                          : 'text-slate-300 group-hover:text-slate-500 group-hover:translate-x-0.5'
+                          : 'text-gray-300 group-hover:text-gray-400 group-hover:translate-x-0.5'
                       }`}
                     />
                   </Link>
@@ -172,13 +172,13 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
       {/* Sidebar Footer */}
       {user && (
-        <div className="p-3 border-t border-slate-100 bg-slate-50/50">
-          <div className="px-3 py-2 rounded-xl bg-white border border-slate-200/70 text-xs">
-            <span className="text-[10px] text-slate-400 uppercase tracking-wider font-semibold block mb-0.5">
+        <div className="p-3 border-t border-gray-100 bg-gray-50/50">
+          <div className="px-3 py-2 rounded-xl bg-white border border-gray-200 text-xs shadow-sm">
+            <span className="text-[10px] text-gray-400 uppercase tracking-wider font-semibold block mb-0.5">
               Logged in as
             </span>
-            <p className="font-bold text-slate-800 truncate">{user.name}</p>
-            <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
+            <p className="font-bold text-gray-900 truncate">{user.name}</p>
+            <p className="text-[11px] text-gray-500 truncate">{user.email}</p>
           </div>
         </div>
       )}
@@ -195,7 +195,7 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         <div className="fixed inset-0 z-50 lg:hidden flex">
           {/* Backdrop overlay */}
           <div
-            className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity"
+            className="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity"
             onClick={onClose}
           />
 

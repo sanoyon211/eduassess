@@ -92,30 +92,30 @@ export default function NewAssignmentPage() {
     <DashboardLayout>
       <div className="max-w-3xl space-y-6">
         {/* Header */}
-        <div className="flex items-center space-x-3 border-b border-slate-200 pb-4">
-          <Link href="/teacher">
-            <Button variant="outline" size="sm" className="h-9 w-9 p-0">
-              <ArrowLeft className="h-4 w-4" />
+        <div className="flex items-start space-x-4 border-b border-gray-200 pb-5">
+          <Link href="/teacher" className="mt-1">
+            <Button variant="outline" size="sm" className="h-9 w-9 p-0 rounded-xl shadow-sm hover:border-gray-300">
+              <ArrowLeft className="h-4.5 w-4.5 text-gray-500" />
             </Button>
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-              <FilePlus2 className="h-6 w-6 text-slate-700" /> Create New Assignment
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
+              <FilePlus2 className="h-6 w-6 text-accent-600" /> Create New Assignment
             </h1>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-gray-500 mt-1">
               Publish coursework, set submission deadlines, and assign instructions.
             </p>
           </div>
         </div>
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 font-medium">
+          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium shadow-sm">
             {error}
           </div>
         )}
 
         {/* Form Container */}
-        <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+        <div className="bg-white border border-gray-200/80 rounded-2xl p-6 sm:p-8 shadow-sm transition-all">
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input
               label="Assignment Title"
@@ -127,13 +127,13 @@ export default function NewAssignmentPage() {
             />
 
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-slate-700">Course Module</label>
+              <label className="block text-sm font-medium text-gray-700">Course Module</label>
               <select
                 value={courseId}
                 onChange={(e) => setCourseId(e.target.value)}
                 required
                 disabled={isSubmitting || isLoadingCourses}
-                className="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                className="w-full px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 shadow-sm transition-all duration-200 disabled:opacity-50 disabled:bg-gray-50"
               >
                 {courses.length === 0 ? (
                   <option value="">No assigned courses available</option>
@@ -148,7 +148,7 @@ export default function NewAssignmentPage() {
             </div>
 
             <div className="space-y-1.5">
-              <label className="block text-sm font-medium text-slate-700">Description & Instructions</label>
+              <label className="block text-sm font-medium text-gray-700">Description & Instructions</label>
               <textarea
                 rows={5}
                 placeholder="Provide detailed instructions, requirements, and evaluation criteria for students..."
@@ -156,11 +156,11 @@ export default function NewAssignmentPage() {
                 onChange={(e) => setDescription(e.target.value)}
                 required
                 disabled={isSubmitting}
-                className="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-md text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm"
+                className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all duration-200 shadow-sm disabled:opacity-50 disabled:bg-gray-50"
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
               <Input
                 label="Submission Due Date"
                 type="datetime-local"
@@ -181,25 +181,25 @@ export default function NewAssignmentPage() {
               />
 
               <div className="space-y-1.5">
-                <label className="block text-sm font-medium text-slate-700">Publishing Status</label>
+                <label className="block text-sm font-medium text-gray-700">Publishing Status</label>
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value as any)}
-                  className="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                  className="w-full px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 shadow-sm transition-all duration-200"
                 >
-                  <option value="Published">Published (Visible to Students)</option>
-                  <option value="Draft">Draft (Hidden from Students)</option>
+                  <option value="Published">Published (Visible)</option>
+                  <option value="Draft">Draft (Hidden)</option>
                 </select>
               </div>
             </div>
 
-            <div className="flex justify-end space-x-3 pt-4 border-t border-slate-100">
+            <div className="flex justify-end space-x-3 pt-5 border-t border-gray-100 mt-2">
               <Link href="/teacher">
-                <Button type="button" variant="outline">
+                <Button type="button" variant="outline" className="shadow-sm">
                   Cancel
                 </Button>
               </Link>
-              <Button type="submit" variant="primary" isLoading={isSubmitting} className="gap-1.5">
+              <Button type="submit" variant="primary" isLoading={isSubmitting} className="gap-2 shadow-sm">
                 <Send className="h-4 w-4" /> Save & Publish
               </Button>
             </div>

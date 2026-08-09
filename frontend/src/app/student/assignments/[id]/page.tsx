@@ -145,113 +145,113 @@ export default function StudentAssignmentDetailPage() {
 
   return (
     <DashboardLayout>
-      <div className="max-w-3xl space-y-6">
+      <div className="max-w-3xl space-y-6 mx-auto sm:mx-0">
         {/* Header */}
-        <div className="flex items-center space-x-3 border-b border-slate-200 pb-4">
-          <Button variant="outline" size="sm" onClick={() => router.back()} className="h-9 w-9 p-0">
-            <ArrowLeft className="h-4 w-4" />
+        <div className="flex items-start space-x-4 border-b border-gray-200 pb-5">
+          <Button variant="outline" size="sm" onClick={() => router.back()} className="h-9 w-9 p-0 rounded-xl mt-1 shadow-sm hover:border-gray-300">
+            <ArrowLeft className="h-4.5 w-4.5 text-gray-500" />
           </Button>
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-              <FileText className="h-6 w-6 text-slate-700" /> Assignment Details
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
+              <FileText className="h-6 w-6 text-brand-600" /> Assignment Details
             </h1>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-gray-500 mt-1">
               Review guidelines, check submission deadlines, and submit your solution.
             </p>
           </div>
         </div>
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 font-medium">
+          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium shadow-sm">
             {error}
           </div>
         )}
 
         {isLoading ? (
-          <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-            <Skeleton className="h-6 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
-            <Skeleton className="h-24 w-full" />
+          <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm space-y-5">
+            <Skeleton className="h-7 w-3/4" />
+            <Skeleton className="h-5 w-1/2" />
+            <Skeleton className="h-28 w-full mt-4" />
           </div>
         ) : assignment ? (
           <>
             {/* Assignment Overview Card */}
-            <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-5">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm space-y-5 transition-all">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100 pb-5">
                 <div>
-                  <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider block">
+                  <span className="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">
                     {assignment.courseId ? `${assignment.courseId.code} - ${assignment.courseId.name}` : 'Course Module'}
                   </span>
-                  <h2 className="text-xl font-bold text-slate-900 mt-1">{assignment.title}</h2>
+                  <h2 className="text-xl font-bold text-gray-900">{assignment.title}</h2>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 border border-slate-200 rounded-md text-xs font-semibold text-slate-700">
-                    <Calendar className="h-3.5 w-3.5 text-slate-500" />
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 shadow-sm">
+                    <Calendar className="h-4 w-4 text-gray-500" />
                     Due: {format(new Date(assignment.dueDate), 'MMM dd, yyyy HH:mm')}
                   </span>
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <h3 className="text-sm font-semibold text-slate-900">Instructions & Requirements</h3>
-                <p className="text-sm text-slate-700 leading-relaxed whitespace-pre-wrap bg-slate-50 p-4 rounded-lg border border-slate-200/80">
+              <div className="space-y-2.5">
+                <h3 className="text-sm font-bold text-gray-900">Instructions & Requirements</h3>
+                <div className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap bg-gray-50/50 p-5 rounded-xl border border-gray-200/60 shadow-inner">
                   {assignment.description}
-                </p>
+                </div>
               </div>
 
               {assignment.createdByTeacherId && (
-                <p className="text-xs text-slate-500">
-                  Assigned by Instructor: <span className="font-semibold text-slate-800">{assignment.createdByTeacherId.name}</span>
+                <p className="text-xs text-gray-500 font-medium pt-2">
+                  Assigned by Instructor: <span className="font-semibold text-gray-800">{assignment.createdByTeacherId.name}</span>
                 </p>
               )}
             </div>
 
             {/* CALLOUT CASE 1: Assignment is Already GRADED */}
             {submission && submission.status === 'Graded' && (
-              <div className="bg-emerald-50 border border-emerald-200 text-emerald-950 rounded-xl p-6 shadow-sm space-y-4">
-                <div className="flex items-center justify-between border-b border-emerald-200/60 pb-3">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+              <div className="bg-emerald-50/80 border border-emerald-200 text-emerald-950 rounded-2xl p-6 shadow-sm space-y-5 transition-all">
+                <div className="flex items-center justify-between border-b border-emerald-200/60 pb-4">
+                  <div className="flex items-center gap-2.5">
+                    <CheckCircle2 className="h-5.5 w-5.5 text-emerald-600" />
                     <h3 className="text-lg font-bold text-emerald-900">Evaluation Completed</h3>
                   </div>
-                  <Badge variant="success">Graded</Badge>
+                  <Badge variant="success" className="px-2.5 py-1">Graded</Badge>
                 </div>
 
-                <div className="flex items-baseline gap-3">
+                <div className="flex items-baseline gap-3 bg-white/50 p-4 rounded-xl border border-emerald-100">
                   <span className="text-sm font-semibold text-emerald-800">Awarded Score:</span>
-                  <span className="text-3xl font-extrabold text-emerald-900">
-                    {submission.marks ?? submission.grade ?? 0} <span className="text-lg text-emerald-700 font-normal">/ 100 pts</span>
+                  <span className="text-3xl font-extrabold text-emerald-900 tracking-tight">
+                    {submission.marks ?? submission.grade ?? 0} <span className="text-lg text-emerald-700/80 font-semibold">/ 100 pts</span>
                   </span>
                 </div>
 
                 {submission.teacherFeedback ? (
-                  <div className="space-y-1.5 pt-2">
-                    <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-900">
-                      <MessageSquare className="h-3.5 w-3.5 text-emerald-700" /> Instructor's Feedback:
+                  <div className="space-y-2 pt-1">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-900 uppercase tracking-wider">
+                      <MessageSquare className="h-4 w-4 text-emerald-700" /> Instructor's Feedback:
                     </div>
-                    <div className="p-4 bg-white border border-emerald-200 rounded-lg text-slate-800 font-medium text-sm leading-relaxed shadow-2xs">
+                    <div className="p-4 bg-white border border-emerald-200 rounded-xl text-gray-800 font-medium text-sm leading-relaxed shadow-sm">
                       {submission.teacherFeedback}
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs text-emerald-700 italic">No written comments provided.</p>
+                  <p className="text-xs text-emerald-700/70 italic font-medium">No written comments provided by instructor.</p>
                 )}
               </div>
             )}
 
             {/* CALLOUT CASE 2: Assignment is SUBMITTED (Pending Review) */}
             {submission && submission.status === 'Pending' && (
-              <div className="bg-blue-50 border border-blue-200 text-blue-950 rounded-xl p-6 shadow-sm space-y-3">
-                <div className="flex items-center justify-between border-b border-blue-200/60 pb-3">
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-5 w-5 text-blue-600 animate-pulse" />
-                    <h3 className="text-lg font-bold text-blue-900">Solution Submitted</h3>
+              <div className="bg-brand-50/80 border border-brand-200 text-brand-950 rounded-2xl p-6 shadow-sm space-y-4 transition-all">
+                <div className="flex items-center justify-between border-b border-brand-200/60 pb-4">
+                  <div className="flex items-center gap-2.5">
+                    <Clock className="h-5.5 w-5.5 text-brand-600 animate-pulse" />
+                    <h3 className="text-lg font-bold text-brand-900">Solution Submitted</h3>
                   </div>
-                  <Badge variant="info">Pending Review</Badge>
+                  <Badge variant="info" className="px-2.5 py-1 text-brand-700 bg-brand-100 border-brand-200">Pending Review</Badge>
                 </div>
 
-                <p className="text-xs text-blue-800">
-                  Your work was submitted on <span className="font-semibold">{format(new Date(submission.submittedAt), 'MMM dd, yyyy HH:mm')}</span> and is currently awaiting instructor evaluation.
+                <p className="text-sm text-brand-800 leading-relaxed bg-white/50 p-4 rounded-xl border border-brand-100">
+                  Your work was submitted on <span className="font-bold">{format(new Date(submission.submittedAt), 'MMM dd, yyyy HH:mm')}</span> and is currently awaiting instructor evaluation.
                 </p>
 
                 <div className="pt-2 flex flex-wrap items-center gap-3">
@@ -259,7 +259,7 @@ export default function StudentAssignmentDetailPage() {
                     href={submission.fileUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-blue-200 rounded-md text-xs font-semibold text-blue-700 hover:bg-blue-100 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-4 py-2 bg-white border border-brand-200 rounded-xl text-xs font-bold text-brand-700 hover:bg-brand-100 hover:border-brand-300 shadow-sm transition-all"
                   >
                     View Submitted Solution Link <ExternalLink className="h-3.5 w-3.5" />
                   </a>
@@ -267,12 +267,12 @@ export default function StudentAssignmentDetailPage() {
                     <Button
                       type="button"
                       variant="outline"
-                      size="sm"
+                      size="md"
                       onClick={() => {
                         setIsEditing(true);
                         setFileUrl(submission.fileUrl);
                       }}
-                      className="text-xs text-blue-700 border-blue-300 bg-white hover:bg-blue-100"
+                      className="text-xs text-brand-700 border-brand-300 bg-white hover:bg-brand-50 shadow-sm"
                     >
                       Update / Resubmit Solution
                     </Button>
@@ -283,56 +283,57 @@ export default function StudentAssignmentDetailPage() {
 
             {/* CALLOUT CASE 3: Overdue & Not Submitted */}
             {!submission && isPastDueDate && (
-              <div className="bg-red-50 border border-red-200 text-red-950 rounded-xl p-6 shadow-sm space-y-2">
-                <div className="flex items-center gap-2 text-red-800">
-                  <AlertCircle className="h-5 w-5 text-red-600" />
-                  <h3 className="text-base font-bold">Submission Deadline Passed</h3>
+              <div className="bg-red-50 border border-red-200 text-red-950 rounded-2xl p-6 shadow-sm space-y-3 transition-all">
+                <div className="flex items-center gap-2.5 text-red-800 border-b border-red-200/60 pb-4">
+                  <AlertCircle className="h-5.5 w-5.5 text-red-600" />
+                  <h3 className="text-lg font-bold">Submission Deadline Passed</h3>
                 </div>
-                <p className="text-xs text-red-700">
-                  The due date for this assignment was <span className="font-semibold">{format(new Date(assignment.dueDate), 'MMM dd, yyyy HH:mm')}</span>. Submissions are closed.
+                <p className="text-sm text-red-800 font-medium bg-white/50 p-4 rounded-xl border border-red-100">
+                  The due date for this assignment was <span className="font-bold">{format(new Date(assignment.dueDate), 'MMM dd, yyyy HH:mm')}</span>. Submissions are now closed.
                 </p>
               </div>
             )}
 
             {/* SUBMISSION FORM SECTION */}
             {submission && submission.status === 'Graded' ? (
-              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex items-center gap-3 text-slate-500 text-xs font-medium">
-                <Lock className="h-4 w-4 text-slate-400" />
+              <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex items-center gap-3 text-gray-500 text-sm font-medium">
+                <div className="p-2 bg-gray-50 rounded-lg"><Lock className="h-4.5 w-4.5 text-gray-400" /></div>
                 <span>Submission Form Locked — Instructor has completed grading your submission.</span>
               </div>
             ) : isPastDueDate ? (
-              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex items-center gap-3 text-slate-500 text-xs font-medium">
-                <Lock className="h-4 w-4 text-slate-400" />
+              <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex items-center gap-3 text-gray-500 text-sm font-medium">
+                <div className="p-2 bg-gray-50 rounded-lg"><Lock className="h-4.5 w-4.5 text-gray-400" /></div>
                 <span>Submission Form Locked — The assignment due date has passed.</span>
               </div>
             ) : submission && !isEditing ? (
-              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm flex items-center justify-between gap-3 text-slate-700 text-xs font-medium">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-emerald-600" />
-                  <span>You submitted a solution for this assignment. You can update your link before the deadline.</span>
+              <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-gray-700 text-sm font-medium transition-all">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-emerald-50 rounded-lg"><CheckCircle2 className="h-5 w-5 text-emerald-600" /></div>
+                  <span>You submitted a solution. You can update your link before the deadline.</span>
                 </div>
                 <Button
                   type="button"
                   variant="outline"
-                  size="sm"
+                  size="md"
                   onClick={() => {
                     setIsEditing(true);
                     setFileUrl(submission.fileUrl);
                   }}
-                  className="text-xs"
+                  className="text-xs shadow-sm w-full sm:w-auto"
                 >
                   Update Solution Link
                 </Button>
               </div>
             ) : (
               /* ACTIVE SUBMISSION FORM (NEW OR UPDATE) */
-              <div className="bg-white border border-slate-200 rounded-xl p-6 shadow-sm space-y-4">
-                <div className="border-b border-slate-100 pb-3 flex items-center justify-between">
+              <div className="bg-white border border-brand-200/60 rounded-2xl p-6 sm:p-8 shadow-md space-y-5 transition-all relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-1 h-full bg-brand-500"></div>
+                <div className="border-b border-gray-100 pb-4 flex items-start sm:items-center justify-between gap-4">
                   <div>
-                    <h3 className="text-base font-bold text-slate-900">
+                    <h3 className="text-lg font-bold text-gray-900">
                       {isEditing ? 'Update Your Submitted Solution' : 'Submit Your Work'}
                     </h3>
-                    <p className="text-xs text-slate-600">
+                    <p className="text-xs text-gray-500 mt-1 font-medium">
                       Provide a URL link to your completed solution (e.g., GitHub repo, Google Drive, or hosted file).
                     </p>
                   </div>
@@ -342,7 +343,7 @@ export default function StudentAssignmentDetailPage() {
                       variant="outline"
                       size="sm"
                       onClick={() => setIsEditing(false)}
-                      className="text-xs"
+                      className="text-xs shadow-sm shrink-0"
                     >
                       Cancel Edit
                     </Button>
@@ -350,12 +351,12 @@ export default function StudentAssignmentDetailPage() {
                 </div>
 
                 {formError && (
-                  <div className="p-3 bg-red-50 border border-red-200 rounded text-xs text-red-700 font-medium">
+                  <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium shadow-sm">
                     {formError}
                   </div>
                 )}
 
-                <form onSubmit={handleSubmitWork} className="space-y-4">
+                <form onSubmit={handleSubmitWork} className="space-y-5">
                   <Input
                     label="Solution File URL / Document Link"
                     type="url"
@@ -367,19 +368,20 @@ export default function StudentAssignmentDetailPage() {
                     helperText="Ensure link permissions are accessible to your instructor."
                   />
 
-                  <div className="flex justify-end space-x-3 pt-2">
+                  <div className="flex justify-end space-x-3 pt-3 border-t border-gray-100">
                     {isEditing && (
                       <Button
                         type="button"
                         variant="outline"
                         onClick={() => setIsEditing(false)}
                         disabled={isSubmitting}
+                        className="shadow-sm"
                       >
                         Cancel
                       </Button>
                     )}
-                    <Button type="submit" variant="primary" isLoading={isSubmitting} className="gap-1.5">
-                      <Send className="h-4 w-4" /> {isEditing ? 'Save Updated Solution' : 'Submit Solution'}
+                    <Button type="submit" variant="primary" isLoading={isSubmitting} className="gap-2 shadow-sm">
+                      <Send className="h-4.5 w-4.5" /> {isEditing ? 'Save Updated Solution' : 'Submit Solution'}
                     </Button>
                   </div>
                 </form>

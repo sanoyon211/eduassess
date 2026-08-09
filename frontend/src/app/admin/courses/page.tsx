@@ -168,20 +168,20 @@ export default function AdminCoursesPage() {
       key: 'code',
       header: 'Course Code',
       className: 'min-w-[130px]',
-      render: (c) => <span className="font-mono font-bold text-slate-900 whitespace-nowrap">{c.code}</span>,
+      render: (c) => <span className="font-mono font-bold text-gray-900 whitespace-nowrap">{c.code}</span>,
     },
     {
       key: 'name',
       header: 'Course Name',
       className: 'min-w-[200px]',
-      render: (c) => <span className="font-semibold text-slate-900">{c.name}</span>,
+      render: (c) => <span className="font-semibold text-gray-900">{c.name}</span>,
     },
     {
       key: 'assignedTeacherId',
       header: 'Assigned Teacher',
       className: 'min-w-[180px]',
       render: (c) => (
-        <span className="text-slate-800 text-sm font-medium whitespace-nowrap">
+        <span className="text-gray-800 text-sm font-medium whitespace-nowrap">
           {c.assignedTeacherId ? c.assignedTeacherId.name : 'Unassigned'}
         </span>
       ),
@@ -205,7 +205,7 @@ export default function AdminCoursesPage() {
           variant="outline"
           size="sm"
           onClick={() => openEnrollModal(c)}
-          className="gap-1 text-xs whitespace-nowrap"
+          className="gap-1.5 text-xs whitespace-nowrap"
         >
           <UserPlus className="h-3.5 w-3.5 shrink-0" /> Enroll Students
         </Button>
@@ -217,27 +217,27 @@ export default function AdminCoursesPage() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-              <BookOpen className="h-6 w-6 text-slate-700" /> Course Management
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
+              <BookOpen className="h-6 w-6 text-brand-600" /> Course Management
             </h1>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-gray-500 mt-1">
               Create academic courses, assign faculty instructors, and enroll students.
             </p>
           </div>
           <Button
             variant="primary"
-            size="sm"
+            size="md"
             onClick={() => setIsCreateModalOpen(true)}
-            className="gap-1.5"
+            className="gap-1.5 shadow-sm"
           >
-            <Plus className="h-4 w-4" /> Create Course
+            <Plus className="h-4.5 w-4.5" /> Create Course
           </Button>
         </div>
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 font-medium">
+          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium">
             {error}
           </div>
         )}
@@ -255,20 +255,20 @@ export default function AdminCoursesPage() {
 
         {/* MODAL 1: Create New Course */}
         {isCreateModalOpen && (
-          <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white border border-slate-200 rounded-xl shadow-lg max-w-md w-full p-6 space-y-5">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-                <h3 className="text-lg font-bold text-slate-900">Create New Course</h3>
+          <div className="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div className="bg-white border border-gray-200 rounded-2xl shadow-xl max-w-md w-full p-6 space-y-5">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
+                <h3 className="text-lg font-bold text-gray-900">Create New Course</h3>
                 <button
                   onClick={() => setIsCreateModalOpen(false)}
-                  className="text-slate-400 hover:text-slate-700 transition-colors"
+                  className="text-gray-400 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 p-1.5 rounded-lg transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               {formError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded text-xs text-red-700">
+                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
                   {formError}
                 </div>
               )}
@@ -291,14 +291,14 @@ export default function AdminCoursesPage() {
                 />
 
                 <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-slate-700">
+                  <label className="block text-sm font-medium text-gray-700">
                     Assign Faculty Teacher
                   </label>
                   <select
                     value={assignedTeacherId}
                     onChange={(e) => setAssignedTeacherId(e.target.value)}
                     required
-                    className="w-full px-3 py-2 text-sm bg-white border border-slate-300 rounded-md text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
+                    className="w-full px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 shadow-sm transition-all duration-200"
                   >
                     <option value="">Select a Teacher...</option>
                     {teachers.map((t) => (
@@ -309,7 +309,7 @@ export default function AdminCoursesPage() {
                   </select>
                 </div>
 
-                <div className="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-2">
                   <Button
                     type="button"
                     variant="outline"
@@ -318,7 +318,7 @@ export default function AdminCoursesPage() {
                     Cancel
                   </Button>
                   <Button type="submit" variant="primary" isLoading={isSubmitting}>
-                    Create & Assign Teacher
+                    Create & Assign
                   </Button>
                 </div>
               </form>
@@ -328,31 +328,31 @@ export default function AdminCoursesPage() {
 
         {/* MODAL 2: Enroll Students */}
         {isEnrollModalOpen && selectedCourseForEnroll && (
-          <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-xs flex items-center justify-center p-4">
-            <div className="bg-white border border-slate-200 rounded-xl shadow-lg max-w-lg w-full p-6 space-y-5">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+          <div className="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
+            <div className="bg-white border border-gray-200 rounded-2xl shadow-xl max-w-lg w-full p-6 space-y-5">
+              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
                 <div>
-                  <h3 className="text-lg font-bold text-slate-900">
+                  <h3 className="text-lg font-bold text-gray-900">
                     Enroll Students into {selectedCourseForEnroll.code}
                   </h3>
-                  <p className="text-xs text-slate-500">{selectedCourseForEnroll.name}</p>
+                  <p className="text-xs text-gray-500 font-medium mt-0.5">{selectedCourseForEnroll.name}</p>
                 </div>
                 <button
                   onClick={() => setIsEnrollModalOpen(false)}
-                  className="text-slate-400 hover:text-slate-700 transition-colors"
+                  className="text-gray-400 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 p-1.5 rounded-lg transition-colors"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               <form onSubmit={handleEnrollStudents} className="space-y-4">
-                <p className="text-xs text-slate-600 font-medium">
+                <p className="text-sm text-gray-600 font-medium">
                   Select students to enroll in this course:
                 </p>
 
-                <div className="max-h-60 overflow-y-auto border border-slate-200 rounded-md divide-y divide-slate-100 p-2 space-y-1">
+                <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-xl divide-y divide-gray-100 p-2 space-y-1 shadow-inner bg-gray-50/50">
                   {students.length === 0 ? (
-                    <p className="text-xs text-slate-500 text-center py-4">
+                    <p className="text-xs text-gray-500 text-center py-6">
                       No students available in system.
                     </p>
                   ) : (
@@ -362,22 +362,24 @@ export default function AdminCoursesPage() {
                         <div
                           key={student._id}
                           onClick={() => handleToggleStudentSelection(student._id)}
-                          className={`flex items-center justify-between p-2 rounded text-xs cursor-pointer transition-colors ${
-                            isSelected ? 'bg-blue-50 text-blue-900' : 'hover:bg-slate-50 text-slate-800'
+                          className={`flex items-center justify-between p-2.5 rounded-lg text-xs cursor-pointer transition-all duration-200 border ${
+                            isSelected 
+                            ? 'bg-brand-50 text-brand-900 border-brand-200 shadow-sm' 
+                            : 'bg-white hover:bg-gray-50 text-gray-800 border-transparent hover:border-gray-200'
                           }`}
                         >
                           <div>
-                            <p className="font-semibold">{student.name}</p>
-                            <p className="text-slate-500">{student.email}</p>
+                            <p className="font-semibold text-sm">{student.name}</p>
+                            <p className={`${isSelected ? 'text-brand-600' : 'text-gray-500'}`}>{student.email}</p>
                           </div>
-                          {isSelected && <Check className="h-4 w-4 text-blue-600" />}
+                          {isSelected && <Check className="h-4.5 w-4.5 text-brand-600" />}
                         </div>
                       );
                     })
                   )}
                 </div>
 
-                <div className="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-2">
                   <Button
                     type="button"
                     variant="outline"

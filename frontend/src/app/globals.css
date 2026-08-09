@@ -7,8 +7,9 @@
 }
 
 html, body {
-  background-color: #f8fafc;
-  color: #0f172a;
+  /* Premium SaaS Surface Background */
+  background-color: #f9fafb;
+  color: #111827; /* Gray 900 for maximum readability */
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   margin: 0;
   padding: 0;
@@ -16,45 +17,42 @@ html, body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Monospace font utility override */
+/* Monospace font for code/technical submissions */
 .font-mono {
   font-family: 'JetBrains Mono', var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
 }
 
-/* Custom corporate scrollbar */
+/* Custom premium scrollbar matching the Deep Indigo theme */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
-  border-radius: 3px;
+  background: #c7d2fe; /* Soft indigo for resting state */
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: #818cf8; /* Darker indigo on hover */
 }
 
 @layer utilities {
-  /* Floating Island Layout Utilities */
-  .island-card {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.3), 0 2px 6px -1px rgba(0, 0, 0, 0.2);
-    border-radius: 1rem;
-    transition: all 0.15s ease-in-out;
+  /* Custom selection color for a branded feel */
+  ::selection {
+    background-color: #e0e7ff; /* brand-100 */
+    color: #312e81; /* brand-900 */
   }
 
-  .island-pill {
-    background-color: #ffffff;
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.25);
-    border-radius: 0.75rem;
-    transition: all 0.15s ease-in-out;
+  /* Optional glassmorphism utility for modern headers/navs */
+  .glass-panel {
+    background-color: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(229, 231, 235, 0.5); /* Soft border */
   }
 }

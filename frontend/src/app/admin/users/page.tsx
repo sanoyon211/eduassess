@@ -66,13 +66,13 @@ export default function AdminUsersPage() {
       key: 'name',
       header: 'User Name',
       className: 'min-w-[180px]',
-      render: (u) => <span className="font-semibold text-slate-900 whitespace-nowrap">{u.name}</span>,
+      render: (u) => <span className="font-semibold text-gray-900 whitespace-nowrap">{u.name}</span>,
     },
     {
       key: 'email',
       header: 'Email Address',
       className: 'min-w-[200px]',
-      render: (u) => <span className="text-slate-600 font-mono text-xs whitespace-nowrap">{u.email}</span>,
+      render: (u) => <span className="text-gray-500 font-mono text-xs whitespace-nowrap">{u.email}</span>,
     },
     {
       key: 'role',
@@ -81,7 +81,8 @@ export default function AdminUsersPage() {
       render: (u) => {
         switch (u.role) {
           case 'Admin':
-            return <Badge variant="default">Admin</Badge>;
+            // Custom elevated look for Admin to match the SaaS Navbar
+            return <Badge variant="default" className="bg-gray-800 text-white border-gray-700">Admin</Badge>;
           case 'Teacher':
             return <Badge variant="success">Teacher</Badge>;
           case 'Student':
@@ -96,7 +97,7 @@ export default function AdminUsersPage() {
       header: 'Joined Date',
       className: 'min-w-[140px]',
       render: (u) => (
-        <span className="text-slate-500 text-xs whitespace-nowrap">
+        <span className="text-gray-500 text-xs font-medium whitespace-nowrap">
           {u.createdAt ? format(new Date(u.createdAt), 'MMM dd, yyyy') : 'N/A'}
         </span>
       ),
@@ -107,39 +108,45 @@ export default function AdminUsersPage() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
           <div>
-            <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-              <Users className="h-6 w-6 text-slate-700" /> Institution Users
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
+              <Users className="h-6 w-6 text-brand-600" /> Institution Users
             </h1>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-gray-500 mt-1">
               Complete list of all registered accounts across Admin, Faculty, and Student roles.
             </p>
           </div>
-          <Button variant="outline" size="sm" onClick={fetchUsers} className="gap-1.5">
-            <RefreshCw className="h-3.5 w-3.5" /> Refresh List
+          <Button variant="outline" size="md" onClick={fetchUsers} className="gap-2 shadow-sm">
+            <RefreshCw className="h-4 w-4" /> Refresh List
           </Button>
         </div>
 
-        {/* Filter Controls */}
-        <div className="flex items-center justify-between gap-4">
-          <div className="relative max-w-xs w-full">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-400" />
+        {/* Filter Controls - Premium SaaS Card Style */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm transition-all">
+          <div className="relative w-full sm:max-w-md">
+            <Search className="absolute left-3.5 top-3 h-4.5 w-4.5 text-gray-400" />
             <Input
               placeholder="Search by name, email, or role..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-9"
+              className="pl-10"
             />
           </div>
-          <span className="text-xs font-semibold text-slate-500">
-            Total Users: <span className="text-slate-900 font-bold">{filteredUsers.length}</span>
-          </span>
+          
+          <div className="flex items-center gap-2.5 px-3.5 py-2 bg-gray-50 rounded-xl border border-gray-100 shrink-0">
+            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
+              Total Users
+            </span>
+            <span className="text-sm text-brand-700 font-bold bg-white px-2.5 py-0.5 rounded-md shadow-sm border border-gray-100">
+              {filteredUsers.length}
+            </span>
+          </div>
         </div>
 
         {/* Error message display */}
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-md text-xs text-red-700 font-medium">
+          <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium">
             {error}
           </div>
         )}

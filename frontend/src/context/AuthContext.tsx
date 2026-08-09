@@ -4,17 +4,10 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Cookies from 'js-cookie';
 import api from '../lib/axios';
+import { UserRole, User } from '@/types'; // Imported from central types
 
-export type UserRole = 'Admin' | 'Teacher' | 'Student';
-
-export interface AuthUser {
-  _id: string;
-  name: string;
-  email: string;
-  role: UserRole;
-  createdAt?: string;
-  updatedAt?: string;
-}
+// AuthUser can just extend the base User type
+export interface AuthUser extends Omit<User, 'createdAt' | 'updatedAt'> {}
 
 interface AuthContextType {
   user: AuthUser | null;
@@ -101,20 +94,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       localStorage.setItem('eduassess_user', JSON.stringify(userPayload));
 
       // Redirect based on User Role
-      if (userPayload.role === 'Admin') {
+      if (userPayload.role === UserRole.ADMIN) {
         router.push('/admin');
-      } else if (userPayload.role === 'Teacher') {
+      } else if (userPayload.role === UserRole.TEACHER) {
         router.push('/teacher');
-      } else if (userPayload.role === 'Student') {
+      } else if (userPayload.role === UserRole.STUDENT) {
         router.push('/student');
       } else {
         router.push('/');
       }
     } catch (error: any) {
-      setIsLoading(false);
       throw error;
     } finally {
-      setIsLoading(false);
+      setIsLoading(false); // Only handle loading state here
     }
   };
 
@@ -122,7 +114,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     name: string,
     email: string,
     password: string,
-    role: UserRole = 'Student'
+    role: UserRole = UserRole.STUDENT
   ): Promise<void> => {
     setIsLoading(true);
     try {

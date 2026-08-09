@@ -48,8 +48,8 @@ export enum SubmissionStatus {
 
 export interface Submission {
   _id: string;
-  assignmentId: Assignment;
-  studentId: User;
+  assignmentId: Assignment | string; // Updated for safety
+  studentId: User | string;          // Updated for safety
   fileUrl: string;
   submittedAt: string;
   status: SubmissionStatus;

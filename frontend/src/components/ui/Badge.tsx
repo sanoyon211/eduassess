@@ -12,14 +12,15 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 export function Badge({ variant = 'default', className, children, ...props }: BadgeProps) {
-  const base = 'inline-flex items-center rounded-md px-2.5 py-0.5 text-xs font-semibold border';
+  // SaaS থিমের জন্য rounded-md পরিবর্তন করে rounded-full (pill shape) করা হয়েছে
+  const base = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border';
 
   const variants = {
-    default: 'bg-slate-100 text-slate-800 border-slate-200',
-    success: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    default: 'bg-gray-100 text-gray-800 border-gray-200',
+    success: 'bg-emerald-50 text-emerald-700 border-emerald-200', // Teal/Emerald accent
     warning: 'bg-amber-50 text-amber-700 border-amber-200',
-    info: 'bg-blue-50 text-blue-700 border-blue-200',
-    secondary: 'bg-slate-100 text-slate-700 border-slate-200',
+    info: 'bg-brand-50 text-brand-700 border-brand-200', // Updated to Deep Indigo
+    secondary: 'bg-gray-50 text-gray-600 border-gray-200',
     danger: 'bg-red-50 text-red-700 border-red-200',
   };
 

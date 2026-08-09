@@ -14,8 +14,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'EduAssess - Academic Assessment & Grading System',
-  description: 'Enterprise academic assessment and assignment management system.',
+  title: 'EduAssess | Premium Assessment Management',
+  description: 'Enterprise-grade academic assessment and assignment management system.',
 };
 
 export default function RootLayout({
@@ -24,9 +24,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="light" style={{ colorScheme: 'light' }}>
-      <body className={`${inter.className} ${jetbrainsMono.variable} min-h-screen bg-[#f8fafc] text-slate-900 antialiased selection:bg-blue-500 selection:text-white`}>
-        <AuthProvider>{children}</AuthProvider>
+    // HTML tag-এ শুধুমাত্র light ক্লাস রাখা হয়েছে, কারণ color-scheme globals.css-এ হ্যান্ডেল করা হয়েছে
+    <html lang="en" className="light">
+      <body 
+        className={`${inter.className} ${jetbrainsMono.variable} min-h-screen bg-gray-50 text-gray-900 antialiased`}
+      >
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

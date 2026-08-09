@@ -38,6 +38,11 @@ api.interceptors.response.use(
       Cookies.remove('eduassess_user');
       localStorage.removeItem('eduassess_token');
       localStorage.removeItem('eduassess_user');
+      
+      // Auto-redirect to login page to prevent stuck UI
+      if (window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(error);
   }

@@ -30,7 +30,7 @@ export function DataTable<T>({
 }: DataTableProps<T>) {
   if (data.length === 0) {
     return (
-      <div className={cn('w-full bg-white border border-slate-200 rounded-lg p-8 text-center text-sm text-slate-500 shadow-sm', className)}>
+      <div className={cn('w-full bg-white border border-gray-200 rounded-xl p-8 text-center text-sm text-gray-500 shadow-sm', className)}>
         {emptyMessage}
       </div>
     );
@@ -39,7 +39,7 @@ export function DataTable<T>({
   return (
     <div className={cn('w-full space-y-4', className)}>
       {/* Mobile Stacked Card View (< md) */}
-      <div className="grid grid-cols-1 gap-3.5 md:hidden">
+      <div className="grid grid-cols-1 gap-4 md:hidden">
         {data.map((item, index) => {
           const rowKey = keyExtractor
             ? keyExtractor(item, index)
@@ -48,14 +48,14 @@ export function DataTable<T>({
           return (
             <div
               key={rowKey}
-              className="bg-white border border-slate-200 rounded-lg p-4 shadow-sm space-y-2.5 transition-shadow hover:shadow"
+              className="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-2.5 transition-all duration-200 hover:shadow-md"
             >
               {columns.map((col) => (
-                <div key={col.key} className="flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-1 border-b border-slate-100 last:border-b-0 pb-2 last:pb-0">
-                  <span className="font-semibold text-slate-500 uppercase tracking-wider text-[11px]">
+                <div key={col.key} className="flex flex-col sm:flex-row sm:items-center justify-between text-xs gap-1 border-b border-gray-100 last:border-b-0 pb-2 last:pb-0">
+                  <span className="font-semibold text-gray-500 uppercase tracking-wider text-[11px]">
                     {col.header}
                   </span>
-                  <div className="text-slate-900 font-medium sm:text-right max-w-full break-words">
+                  <div className="text-gray-900 font-medium sm:text-right max-w-full break-words">
                     {col.render
                       ? col.render(item, index)
                       : (item as any)[col.key] !== undefined
@@ -70,15 +70,15 @@ export function DataTable<T>({
       </div>
 
       {/* Desktop Traditional Table View (>= md) */}
-      <div className="hidden md:block w-full bg-white border border-slate-200 rounded-lg shadow-sm overflow-x-auto">
+      <div className="hidden md:block w-full bg-white border border-gray-200 rounded-xl shadow-sm overflow-x-auto">
         <table className="w-full text-left text-sm border-collapse min-w-[640px]">
-          <thead className="bg-slate-50 border-b border-slate-200">
+          <thead className="bg-gray-50 border-b border-gray-200">
             <tr>
               {columns.map((col) => (
                 <th
                   key={col.key}
                   className={cn(
-                    'px-4 py-3 text-xs font-semibold uppercase tracking-wider text-slate-700 select-none',
+                    'px-5 py-3.5 text-xs font-semibold uppercase tracking-wider text-gray-500 select-none',
                     col.className
                   )}
                 >
@@ -87,7 +87,7 @@ export function DataTable<T>({
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-gray-100">
             {data.map((item, index) => {
               const rowKey = keyExtractor
                 ? keyExtractor(item, index)
@@ -96,10 +96,10 @@ export function DataTable<T>({
               return (
                 <tr
                   key={rowKey}
-                  className="hover:bg-slate-50/60 transition-colors text-slate-900"
+                  className="hover:bg-gray-50/80 transition-colors text-gray-900"
                 >
                   {columns.map((col) => (
-                    <td key={col.key} className={cn('px-4 py-3 font-normal', col.className)}>
+                    <td key={col.key} className={cn('px-5 py-4 font-normal whitespace-nowrap', col.className)}>
                       {col.render
                         ? col.render(item, index)
                         : (item as any)[col.key] !== undefined
