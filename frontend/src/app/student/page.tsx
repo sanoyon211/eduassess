@@ -3,9 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { StatsCard } from '@/components/ui/StatsCard';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { DataTable, DataTableColumn } from '@/components/ui/DataTable';
-import { TableSkeleton, Skeleton } from '@/components/ui/Skeleton';
-import { Badge } from '@/components/ui/Badge';
+import { TableSkeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/Button';
 import {
   GraduationCap,
@@ -13,7 +15,6 @@ import {
   CheckCircle2,
   Clock,
   ArrowRight,
-  BookOpen,
   Calendar,
   RefreshCw,
 } from 'lucide-react';
@@ -96,35 +97,21 @@ export default function StudentDashboardPage() {
         if (sub) {
           if (sub.status === 'Graded') {
             return (
-              <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/70 shadow-sm">
-                <span className="h-2 w-2 rounded-full bg-emerald-500" />
-                Graded ({sub.marks ?? sub.grade ?? 0}/{max})
-              </span>
+              <StatusBadge
+                status="Graded"
+                marks={sub.marks ?? sub.grade ?? 0}
+                maxMarks={max}
+              />
             );
           }
-          return (
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/70 shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              Submitted
-            </span>
-          );
+          return <StatusBadge status="Submitted" />;
         }
 
         if (isPastDue) {
-          return (
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-red-700 bg-red-50 px-2.5 py-1 rounded-lg border border-red-200/70 shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-red-500" />
-              Overdue
-            </span>
-          );
+          return <StatusBadge status="Overdue" />;
         }
 
-        return (
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-gray-600 bg-gray-50 px-2.5 py-1 rounded-lg border border-gray-200 shadow-sm">
-            <span className="h-2 w-2 rounded-full bg-gray-400" />
-            Pending
-          </span>
-        );
+        return <StatusBadge status="Pending" />;
       },
     },
     {
@@ -185,77 +172,44 @@ export default function StudentDashboardPage() {
     <DashboardLayout>
       <div className="space-y-8">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-              <GraduationCap className="h-6 w-6 text-brand-500" /> Student Portal Overview
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Track enrolled coursework, submission deadlines, and feedback evaluations.
-            </p>
-          </div>
-          <Button variant="outline" size="md" onClick={fetchData} className="gap-1.5 shadow-sm">
-            <RefreshCw className="h-4 w-4 text-gray-500" /> Refresh
-          </Button>
-        </div>
+        <PageHeader
+          title="Student Portal Overview"
+          subtitle="Track enrolled coursework, submission deadlines, and feedback evaluations."
+          icon={GraduationCap}
+          iconClassName="text-brand-500"
+          actions={
+            <Button variant="outline" size="md" onClick={fetchData} className="gap-1.5 shadow-sm">
+              <RefreshCw className="h-4 w-4 text-gray-500" /> Refresh
+            </Button>
+          }
+        />
 
         {/* Stats Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {/* Total Assignments Card */}
-          <div className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm transition-all hover:shadow-md space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                Total Assignments
-              </span>
-              <div className="h-9 w-9 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center font-bold">
-                <FileText className="h-4.5 w-4.5" />
-              </div>
-            </div>
-            {isLoading ? (
-              <Skeleton className="h-9 w-20" />
-            ) : (
-              <p className="text-3xl font-bold text-gray-900 tracking-tight">{assignments.length}</p>
-            )}
-            <p className="text-xs text-gray-500 font-medium">Enrolled published coursework</p>
-          </div>
-
-          {/* Pending Submissions Card */}
-          <div className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm transition-all hover:shadow-md space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                Pending Submissions
-              </span>
-              <div className="h-9 w-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
-                <Clock className="h-4.5 w-4.5" />
-              </div>
-            </div>
-            {isLoading ? (
-              <Skeleton className="h-9 w-20" />
-            ) : (
-              <p className="text-3xl font-bold text-gray-900 tracking-tight">
-                {pendingCount < 0 ? 0 : pendingCount}
-              </p>
-            )}
-            <p className="text-xs text-gray-500 font-medium">Awaiting your solution</p>
-          </div>
-
-          {/* Completed Card */}
-          <div className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm transition-all hover:shadow-md space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider">
-                Completed & Graded
-              </span>
-              <div className="h-9 w-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
-                <CheckCircle2 className="h-4.5 w-4.5" />
-              </div>
-            </div>
-            {isLoading ? (
-              <Skeleton className="h-9 w-20" />
-            ) : (
-              <p className="text-3xl font-bold text-gray-900 tracking-tight">{completedCount}</p>
-            )}
-            <p className="text-xs text-gray-500 font-medium">Submitted coursework</p>
-          </div>
+          <StatsCard
+            title="Total Assignments"
+            value={assignments.length}
+            subtitle="Enrolled published coursework"
+            icon={FileText}
+            colorScheme="brand"
+            isLoading={isLoading}
+          />
+          <StatsCard
+            title="Pending Submissions"
+            value={pendingCount < 0 ? 0 : pendingCount}
+            subtitle="Awaiting your solution"
+            icon={Clock}
+            colorScheme="amber"
+            isLoading={isLoading}
+          />
+          <StatsCard
+            title="Completed & Graded"
+            value={completedCount}
+            subtitle="Submitted coursework"
+            icon={CheckCircle2}
+            colorScheme="emerald"
+            isLoading={isLoading}
+          />
         </div>
 
         {error && (

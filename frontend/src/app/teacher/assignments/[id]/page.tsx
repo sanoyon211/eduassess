@@ -3,9 +3,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Modal } from '@/components/ui/Modal';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { DataTable, DataTableColumn } from '@/components/ui/DataTable';
-import { TableSkeleton, Skeleton } from '@/components/ui/Skeleton';
-import { Badge } from '@/components/ui/Badge';
+import { TableSkeleton } from '@/components/ui/Skeleton';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import {
@@ -13,10 +15,7 @@ import {
   ArrowLeft,
   ExternalLink,
   Award,
-  MessageSquare,
-  X,
   CheckCircle2,
-  Clock,
 } from 'lucide-react';
 import { format } from 'date-fns';
 import api from '@/lib/axios';
@@ -159,12 +158,7 @@ export default function AssignmentDetailPage() {
       key: 'status',
       header: 'Status',
       className: 'min-w-[120px]',
-      render: (s) =>
-        s.status === 'Graded' ? (
-          <Badge variant="success">Graded</Badge>
-        ) : (
-          <Badge variant="warning">Pending Review</Badge>
-        ),
+      render: (s) => <StatusBadge status={s.status} />,
     },
     {
       key: 'marks',
@@ -207,19 +201,22 @@ export default function AssignmentDetailPage() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-start space-x-4 border-b border-gray-200 pb-5">
-          <Button variant="outline" size="sm" onClick={() => router.back()} className="h-9 w-9 p-0 rounded-xl mt-1 shadow-sm hover:border-gray-300">
-            <ArrowLeft className="h-4.5 w-4.5 text-gray-500" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-              <FileCheck className="h-6 w-6 text-accent-600" /> Student Submissions & Grading
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Review submitted solutions, award scores, and provide written feedback.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="Student Submissions & Grading"
+          subtitle="Review submitted solutions, award scores, and provide written feedback."
+          icon={FileCheck}
+          iconClassName="text-accent-600"
+          actions={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => router.back()}
+              className="gap-1.5 text-xs shadow-sm hover:border-gray-300"
+            >
+              <ArrowLeft className="h-4 w-4 text-gray-500" /> Back
+            </Button>
+          }
+        />
 
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium shadow-sm">
@@ -239,73 +236,60 @@ export default function AssignmentDetailPage() {
         )}
 
         {/* GRADE MODAL */}
-        {isGradeModalOpen && selectedSubmission && (
-          <div className="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-xl max-w-md w-full p-6 space-y-5">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">
-                    Grade Submission
-                  </h3>
-                  <p className="text-xs text-gray-500 mt-0.5">
-                    Student: <span className="font-semibold text-gray-800">{selectedSubmission.studentId?.name}</span>
-                  </p>
-                </div>
-                <button
-                  onClick={() => setIsGradeModalOpen(false)}
-                  className="text-gray-400 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 p-1.5 rounded-lg transition-colors"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
+        <Modal
+          isOpen={isGradeModalOpen}
+          onClose={() => setIsGradeModalOpen(false)}
+          title="Grade Submission"
+          subtitle={selectedSubmission ? `Student: ${selectedSubmission.studentId?.name || ''}` : undefined}
+          maxWidth="md"
+        >
+          {selectedSubmission && (
+            <form onSubmit={handleGradeSubmit} className="space-y-4">
               {modalError && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium">
                   {modalError}
                 </div>
               )}
 
-              <form onSubmit={handleGradeSubmit} className="space-y-4">
-                <Input
-                  label={`Awarded Score / Marks (Out of ${currentMaxMarks})`}
-                  type="number"
-                  min={0}
-                  max={currentMaxMarks}
-                  placeholder={`e.g. ${Math.round(currentMaxMarks * 0.9)}`}
-                  value={marks}
-                  onChange={(e) => setMarks(e.target.value === '' ? '' : Number(e.target.value))}
-                  required
+              <Input
+                label={`Awarded Score / Marks (Out of ${currentMaxMarks})`}
+                type="number"
+                min={0}
+                max={currentMaxMarks}
+                placeholder={`e.g. ${Math.round(currentMaxMarks * 0.9)}`}
+                value={marks}
+                onChange={(e) => setMarks(e.target.value === '' ? '' : Number(e.target.value))}
+                required
+              />
+
+              <div className="space-y-1.5">
+                <label className="block text-sm font-medium text-gray-700">
+                  Teacher Feedback & Comments
+                </label>
+                <textarea
+                  rows={4}
+                  placeholder="Provide constructive feedback for the student..."
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all duration-200 shadow-sm"
                 />
+              </div>
 
-                <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Teacher Feedback & Comments
-                  </label>
-                  <textarea
-                    rows={4}
-                    placeholder="Provide constructive feedback for the student..."
-                    value={feedback}
-                    onChange={(e) => setFeedback(e.target.value)}
-                    className="w-full px-4 py-3 text-sm bg-white border border-gray-200 rounded-xl text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 transition-all duration-200 shadow-sm"
-                  />
-                </div>
-
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsGradeModalOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" variant="primary" isLoading={isSubmittingGrade} className="shadow-sm gap-1.5">
-                    <CheckCircle2 className="h-4.5 w-4.5" /> Save Grade
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+              <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setIsGradeModalOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit" variant="primary" isLoading={isSubmittingGrade} className="shadow-sm gap-1.5">
+                  <CheckCircle2 className="h-4.5 w-4.5" /> Save Grade
+                </Button>
+              </div>
+            </form>
+          )}
+        </Modal>
       </div>
     </DashboardLayout>
   );

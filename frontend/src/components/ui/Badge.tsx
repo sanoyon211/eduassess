@@ -12,7 +12,6 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 export function Badge({ variant = 'default', className, children, ...props }: BadgeProps) {
-  // SaaS থিমের জন্য rounded-md পরিবর্তন করে rounded-full (pill shape) করা হয়েছে
   const base = 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium border';
 
   const variants = {

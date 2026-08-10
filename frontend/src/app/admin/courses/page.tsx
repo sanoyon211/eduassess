@@ -2,12 +2,14 @@
 
 import React, { useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { Modal } from '@/components/ui/Modal';
 import { DataTable, DataTableColumn } from '@/components/ui/DataTable';
-import { TableSkeleton, Skeleton } from '@/components/ui/Skeleton';
+import { TableSkeleton } from '@/components/ui/Skeleton';
 import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { BookOpen, Plus, UserPlus, UserCheck, X, Check } from 'lucide-react';
+import { BookOpen, Plus, UserPlus, Check } from 'lucide-react';
 import api from '@/lib/axios';
 
 interface TeacherUser {
@@ -68,7 +70,6 @@ export default function AdminCoursesPage() {
     setIsLoading(true);
     setError(null);
     try {
-      // Fetch users to extract teachers & students
       const usersRes = await api.get('/admin/users');
       const allUsers: any[] = usersRes.data.data || [];
       const teacherList = allUsers.filter((u) => u.role === 'Teacher');
@@ -77,8 +78,6 @@ export default function AdminCoursesPage() {
       setTeachers(teacherList);
       setStudents(studentList);
 
-      // Fetch courses (We can use a dummy/direct query or build simulated list from models if backend endpoint exists)
-      // Since backend has courses schema and createCourse endpoint:
       try {
         const coursesRes = await api.get('/admin/courses').catch(() => ({ data: { data: [] } }));
         setCourses(coursesRes.data.data || []);
@@ -116,7 +115,6 @@ export default function AdminCoursesPage() {
       const newCourse = response.data.data;
       setCourses((prev) => [newCourse, ...prev]);
 
-      // Reset form and close modal
       setCourseName('');
       setCourseCode('');
       setAssignedTeacherId('');
@@ -130,7 +128,6 @@ export default function AdminCoursesPage() {
 
   const openEnrollModal = (course: CourseRecord) => {
     setSelectedCourseForEnroll(course);
-    // Pre-select currently enrolled student IDs
     const existingIds = (course.enrolledStudentIds || []).map((s) => (typeof s === 'string' ? s : s._id));
     setSelectedStudentIds(existingIds);
     setIsEnrollModalOpen(true);
@@ -217,24 +214,22 @@ export default function AdminCoursesPage() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-              <BookOpen className="h-6 w-6 text-brand-600" /> Course Management
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Create academic courses, assign faculty instructors, and enroll students.
-            </p>
-          </div>
-          <Button
-            variant="primary"
-            size="md"
-            onClick={() => setIsCreateModalOpen(true)}
-            className="gap-1.5 shadow-sm"
-          >
-            <Plus className="h-4.5 w-4.5" /> Create Course
-          </Button>
-        </div>
+        <PageHeader
+          title="Course Management"
+          subtitle="Create academic courses, assign faculty instructors, and enroll students."
+          icon={BookOpen}
+          iconClassName="text-brand-600"
+          actions={
+            <Button
+              variant="primary"
+              size="md"
+              onClick={() => setIsCreateModalOpen(true)}
+              className="gap-1.5 shadow-sm"
+            >
+              <Plus className="h-4.5 w-4.5" /> Create Course
+            </Button>
+          }
+        />
 
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium">
@@ -254,147 +249,125 @@ export default function AdminCoursesPage() {
         )}
 
         {/* MODAL 1: Create New Course */}
-        {isCreateModalOpen && (
-          <div className="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-xl max-w-md w-full p-6 space-y-5">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 className="text-lg font-bold text-gray-900">Create New Course</h3>
-                <button
-                  onClick={() => setIsCreateModalOpen(false)}
-                  className="text-gray-400 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 p-1.5 rounded-lg transition-colors"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
-
-              {formError && (
-                <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700">
-                  {formError}
-                </div>
-              )}
-
-              <form onSubmit={handleCreateCourse} className="space-y-4">
-                <Input
-                  label="Course Code"
-                  placeholder="e.g. CS101"
-                  value={courseCode}
-                  onChange={(e) => setCourseCode(e.target.value.toUpperCase())}
-                  required
-                />
-
-                <Input
-                  label="Course Name"
-                  placeholder="e.g. Computer Science 101"
-                  value={courseName}
-                  onChange={(e) => setCourseName(e.target.value)}
-                  required
-                />
-
-                <div className="space-y-1.5">
-                  <label className="block text-sm font-medium text-gray-700">
-                    Assign Faculty Teacher
-                  </label>
-                  <select
-                    value={assignedTeacherId}
-                    onChange={(e) => setAssignedTeacherId(e.target.value)}
-                    required
-                    className="w-full px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 shadow-sm transition-all duration-200"
-                  >
-                    <option value="">Select a Teacher...</option>
-                    {teachers.map((t) => (
-                      <option key={t._id} value={t._id}>
-                        {t.name} ({t.email})
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsCreateModalOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" variant="primary" isLoading={isSubmitting}>
-                    Create & Assign
-                  </Button>
-                </div>
-              </form>
+        <Modal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          title="Create New Course"
+          maxWidth="md"
+        >
+          {formError && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 mb-4">
+              {formError}
             </div>
-          </div>
-        )}
+          )}
+
+          <form onSubmit={handleCreateCourse} className="space-y-4">
+            <Input
+              label="Course Code"
+              placeholder="e.g. CS101"
+              value={courseCode}
+              onChange={(e) => setCourseCode(e.target.value.toUpperCase())}
+              required
+            />
+
+            <Input
+              label="Course Name"
+              placeholder="e.g. Computer Science 101"
+              value={courseName}
+              onChange={(e) => setCourseName(e.target.value)}
+              required
+            />
+
+            <div className="space-y-1.5">
+              <label className="block text-sm font-medium text-gray-700">
+                Assign Faculty Teacher
+              </label>
+              <select
+                value={assignedTeacherId}
+                onChange={(e) => setAssignedTeacherId(e.target.value)}
+                required
+                className="w-full px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-xl text-gray-900 focus:outline-none focus:ring-4 focus:ring-brand-500/10 focus:border-brand-500 shadow-sm transition-all duration-200"
+              >
+                <option value="">Select a Teacher...</option>
+                {teachers.map((t) => (
+                  <option key={t._id} value={t._id}>
+                    {t.name} ({t.email})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsCreateModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" isLoading={isSubmitting}>
+                Create & Assign
+              </Button>
+            </div>
+          </form>
+        </Modal>
 
         {/* MODAL 2: Enroll Students */}
-        {isEnrollModalOpen && selectedCourseForEnroll && (
-          <div className="fixed inset-0 z-50 bg-gray-900/60 backdrop-blur-sm flex items-center justify-center p-4 transition-opacity">
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-xl max-w-lg w-full p-6 space-y-5">
-              <div className="flex items-center justify-between border-b border-gray-100 pb-3">
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">
-                    Enroll Students into {selectedCourseForEnroll.code}
-                  </h3>
-                  <p className="text-xs text-gray-500 font-medium mt-0.5">{selectedCourseForEnroll.name}</p>
-                </div>
-                <button
-                  onClick={() => setIsEnrollModalOpen(false)}
-                  className="text-gray-400 hover:text-gray-700 bg-gray-50 hover:bg-gray-100 p-1.5 rounded-lg transition-colors"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              </div>
+        <Modal
+          isOpen={isEnrollModalOpen}
+          onClose={() => setIsEnrollModalOpen(false)}
+          title={`Enroll Students into ${selectedCourseForEnroll?.code || ''}`}
+          subtitle={selectedCourseForEnroll?.name}
+          maxWidth="lg"
+        >
+          <form onSubmit={handleEnrollStudents} className="space-y-4">
+            <p className="text-sm text-gray-600 font-medium">
+              Select students to enroll in this course:
+            </p>
 
-              <form onSubmit={handleEnrollStudents} className="space-y-4">
-                <p className="text-sm text-gray-600 font-medium">
-                  Select students to enroll in this course:
+            <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-xl divide-y divide-gray-100 p-2 space-y-1 shadow-inner bg-gray-50/50">
+              {students.length === 0 ? (
+                <p className="text-xs text-gray-500 text-center py-6">
+                  No students available in system.
                 </p>
-
-                <div className="max-h-60 overflow-y-auto border border-gray-200 rounded-xl divide-y divide-gray-100 p-2 space-y-1 shadow-inner bg-gray-50/50">
-                  {students.length === 0 ? (
-                    <p className="text-xs text-gray-500 text-center py-6">
-                      No students available in system.
-                    </p>
-                  ) : (
-                    students.map((student) => {
-                      const isSelected = selectedStudentIds.includes(student._id);
-                      return (
-                        <div
-                          key={student._id}
-                          onClick={() => handleToggleStudentSelection(student._id)}
-                          className={`flex items-center justify-between p-2.5 rounded-lg text-xs cursor-pointer transition-all duration-200 border ${
-                            isSelected 
-                            ? 'bg-brand-50 text-brand-900 border-brand-200 shadow-sm' 
-                            : 'bg-white hover:bg-gray-50 text-gray-800 border-transparent hover:border-gray-200'
-                          }`}
-                        >
-                          <div>
-                            <p className="font-semibold text-sm">{student.name}</p>
-                            <p className={`${isSelected ? 'text-brand-600' : 'text-gray-500'}`}>{student.email}</p>
-                          </div>
-                          {isSelected && <Check className="h-4.5 w-4.5 text-brand-600" />}
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-
-                <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-2">
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => setIsEnrollModalOpen(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" variant="primary" isLoading={isEnrolling}>
-                    Save Enrollment ({selectedStudentIds.length})
-                  </Button>
-                </div>
-              </form>
+              ) : (
+                students.map((student) => {
+                  const isSelected = selectedStudentIds.includes(student._id);
+                  return (
+                    <div
+                      key={student._id}
+                      onClick={() => handleToggleStudentSelection(student._id)}
+                      className={`flex items-center justify-between p-2.5 rounded-lg text-xs cursor-pointer transition-all duration-200 border ${
+                        isSelected
+                          ? 'bg-brand-50 text-brand-900 border-brand-200 shadow-sm'
+                          : 'bg-white hover:bg-gray-50 text-gray-800 border-transparent hover:border-gray-200'
+                      }`}
+                    >
+                      <div>
+                        <p className="font-semibold text-sm">{student.name}</p>
+                        <p className={`${isSelected ? 'text-brand-600' : 'text-gray-500'}`}>{student.email}</p>
+                      </div>
+                      {isSelected && <Check className="h-4.5 w-4.5 text-brand-600" />}
+                    </div>
+                  );
+                })
+              )}
             </div>
-          </div>
-        )}
+
+            <div className="flex justify-end space-x-3 pt-4 border-t border-gray-100 mt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setIsEnrollModalOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" isLoading={isEnrolling}>
+                Save Enrollment ({selectedStudentIds.length})
+              </Button>
+            </div>
+          </form>
+        </Modal>
       </div>
     </DashboardLayout>
   );

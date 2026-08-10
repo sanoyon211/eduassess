@@ -3,11 +3,12 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { DataTable, DataTableColumn } from '@/components/ui/DataTable';
 import { TableSkeleton } from '@/components/ui/Skeleton';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
-import { FileText, Plus, Eye, Calendar, Clock, RefreshCw } from 'lucide-react';
+import { FileText, Plus, Eye, Calendar, RefreshCw } from 'lucide-react';
 import { format } from 'date-fns';
 import api from '@/lib/axios';
 
@@ -88,12 +89,7 @@ export default function TeacherDashboardPage() {
       key: 'status',
       header: 'Status',
       className: 'min-w-[110px]',
-      render: (a) =>
-        a.status === 'Published' ? (
-          <Badge variant="success">Published</Badge>
-        ) : (
-          <Badge variant="secondary">Draft</Badge>
-        ),
+      render: (a) => <StatusBadge status={a.status} />,
     },
     {
       key: 'actions',
@@ -113,26 +109,24 @@ export default function TeacherDashboardPage() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-              <FileText className="h-6 w-6 text-accent-600" /> Faculty Assignments
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Manage coursework, track submission deadlines, and evaluate student submissions.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <Button variant="outline" size="md" onClick={fetchAssignments} className="gap-1.5 shadow-sm">
-              <RefreshCw className="h-4 w-4 text-gray-500" /> Refresh
-            </Button>
-            <Link href="/teacher/assignments/new">
-              <Button variant="primary" size="md" className="gap-1.5 shadow-sm">
-                <Plus className="h-4.5 w-4.5" /> Create Assignment
+        <PageHeader
+          title="Faculty Assignments"
+          subtitle="Manage coursework, track submission deadlines, and evaluate student submissions."
+          icon={FileText}
+          iconClassName="text-accent-600"
+          actions={
+            <>
+              <Button variant="outline" size="md" onClick={fetchAssignments} className="gap-1.5 shadow-sm">
+                <RefreshCw className="h-4 w-4 text-gray-500" /> Refresh
               </Button>
-            </Link>
-          </div>
-        </div>
+              <Link href="/teacher/assignments/new">
+                <Button variant="primary" size="md" className="gap-1.5 shadow-sm">
+                  <Plus className="h-4.5 w-4.5" /> Create Assignment
+                </Button>
+              </Link>
+            </>
+          }
+        />
 
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium shadow-sm">

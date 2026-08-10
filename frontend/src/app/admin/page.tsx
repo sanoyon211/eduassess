@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { Skeleton } from '@/components/ui/Skeleton';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { StatsCard } from '@/components/ui/StatsCard';
 import { Button } from '@/components/ui/Button';
 import { Users, BookOpen, GraduationCap, FileText, ArrowRight, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
@@ -45,91 +46,52 @@ export default function AdminDashboardPage() {
     <DashboardLayout>
       <div className="space-y-8">
         {/* Header Title */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Admin Overview</h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Institution metrics, user management, and course allocation.
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+        <PageHeader
+          title="Admin Overview"
+          subtitle="Institution metrics, user management, and course allocation."
+          actions={
             <Link href="/admin/courses">
               <Button variant="primary" size="md" className="gap-2 shadow-sm">
                 <PlusCircle className="h-4.5 w-4.5" /> Create Course
               </Button>
             </Link>
-          </div>
-        </div>
+          }
+        />
 
         {/* Stats Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {/* Total Users Card */}
-          <div className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm space-y-3 transition-all hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Total Users
-              </span>
-              <div className="h-9 w-9 rounded-xl bg-brand-50 flex items-center justify-center text-brand-600">
-                <Users className="h-4.5 w-4.5" />
-              </div>
-            </div>
-            {isLoading ? (
-              <Skeleton className="h-9 w-24" />
-            ) : (
-              <p className="text-3xl font-bold text-gray-900">{totalUsers ?? 0}</p>
-            )}
-            <p className="text-xs text-gray-500 font-medium">Registered platform accounts</p>
-          </div>
-
-          {/* Total Faculty Card */}
-          <div className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm space-y-3 transition-all hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Faculty Teachers
-              </span>
-              <div className="h-9 w-9 rounded-xl bg-accent-50 text-accent-600 flex items-center justify-center">
-                <GraduationCap className="h-4.5 w-4.5" />
-              </div>
-            </div>
-            {isLoading ? (
-              <Skeleton className="h-9 w-24" />
-            ) : (
-              <p className="text-3xl font-bold text-gray-900">{totalTeachers ?? 0}</p>
-            )}
-            <p className="text-xs text-gray-500 font-medium">Assigned course instructors</p>
-          </div>
-
-          {/* Enrolled Students Card */}
-          <div className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm space-y-3 transition-all hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Students
-              </span>
-              <div className="h-9 w-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-                <FileText className="h-4.5 w-4.5" />
-              </div>
-            </div>
-            {isLoading ? (
-              <Skeleton className="h-9 w-24" />
-            ) : (
-              <p className="text-3xl font-bold text-gray-900">{totalStudents ?? 0}</p>
-            )}
-            <p className="text-xs text-gray-500 font-medium">Active learners in system</p>
-          </div>
-
-          {/* Active Modules Card */}
-          <div className="bg-white border border-gray-200/80 rounded-2xl p-5 shadow-sm space-y-3 transition-all hover:shadow-md">
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
-                Courses
-              </span>
-              <div className="h-9 w-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                <BookOpen className="h-4.5 w-4.5" />
-              </div>
-            </div>
-            <p className="text-3xl font-bold text-gray-900">Active</p>
-            <p className="text-xs text-gray-500 font-medium">Manage course catalogs</p>
-          </div>
+          <StatsCard
+            title="Total Users"
+            value={totalUsers ?? 0}
+            subtitle="Registered platform accounts"
+            icon={Users}
+            colorScheme="brand"
+            isLoading={isLoading}
+          />
+          <StatsCard
+            title="Faculty Teachers"
+            value={totalTeachers ?? 0}
+            subtitle="Assigned course instructors"
+            icon={GraduationCap}
+            colorScheme="accent"
+            isLoading={isLoading}
+          />
+          <StatsCard
+            title="Students"
+            value={totalStudents ?? 0}
+            subtitle="Active learners in system"
+            icon={FileText}
+            colorScheme="blue"
+            isLoading={isLoading}
+          />
+          <StatsCard
+            title="Courses"
+            value="Active"
+            subtitle="Manage course catalogs"
+            icon={BookOpen}
+            colorScheme="amber"
+            isLoading={false}
+          />
         </div>
 
         {/* Quick Navigation Panel */}

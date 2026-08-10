@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    // HTML tag-এ শুধুমাত্র light ক্লাস রাখা হয়েছে, কারণ color-scheme globals.css-এ হ্যান্ডেল করা হয়েছে
+    
     <html lang="en" className="light">
       <body 
         className={`${inter.className} ${jetbrainsMono.variable} min-h-screen bg-gray-50 text-gray-900 antialiased`}

@@ -2,9 +2,10 @@
 
 import React, { useEffect, useState } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { DataTable, DataTableColumn } from '@/components/ui/DataTable';
 import { TableSkeleton } from '@/components/ui/Skeleton';
-import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Users, Search, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -78,19 +79,7 @@ export default function AdminUsersPage() {
       key: 'role',
       header: 'Assigned Role',
       className: 'min-w-[120px]',
-      render: (u) => {
-        switch (u.role) {
-          case 'Admin':
-            // Custom elevated look for Admin to match the SaaS Navbar
-            return <Badge variant="default" className="bg-gray-800 text-white border-gray-700">Admin</Badge>;
-          case 'Teacher':
-            return <Badge variant="success">Teacher</Badge>;
-          case 'Student':
-            return <Badge variant="info">Student</Badge>;
-          default:
-            return <Badge variant="secondary">{u.role}</Badge>;
-        }
-      },
+      render: (u) => <StatusBadge status={u.role} />,
     },
     {
       key: 'createdAt',
@@ -108,19 +97,17 @@ export default function AdminUsersPage() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Page Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-              <Users className="h-6 w-6 text-brand-600" /> Institution Users
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Complete list of all registered accounts across Admin, Faculty, and Student roles.
-            </p>
-          </div>
-          <Button variant="outline" size="md" onClick={fetchUsers} className="gap-2 shadow-sm">
-            <RefreshCw className="h-4 w-4" /> Refresh List
-          </Button>
-        </div>
+        <PageHeader
+          title="Institution Users"
+          subtitle="Complete list of all registered accounts across Admin, Faculty, and Student roles."
+          icon={Users}
+          iconClassName="text-brand-600"
+          actions={
+            <Button variant="outline" size="md" onClick={fetchUsers} className="gap-2 shadow-sm">
+              <RefreshCw className="h-4 w-4" /> Refresh List
+            </Button>
+          }
+        />
 
         {/* Filter Controls - Premium SaaS Card Style */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm transition-all">

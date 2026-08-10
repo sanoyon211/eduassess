@@ -3,17 +3,16 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { DataTable, DataTableColumn } from '@/components/ui/DataTable';
 import { TableSkeleton } from '@/components/ui/Skeleton';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import {
   CheckCircle,
   ExternalLink,
   Search,
-  CheckCircle2,
-  Clock,
   BookOpen,
   FileText,
   MessageSquare,
@@ -137,16 +136,7 @@ export default function StudentSubmissionsPage() {
       key: 'status',
       header: 'Status',
       className: 'min-w-[110px]',
-      render: (sub) => (
-        <Badge variant={sub.status === 'Graded' ? 'success' : 'warning'}>
-          {sub.status === 'Graded' ? (
-            <CheckCircle2 className="h-3 w-3 mr-1 inline" />
-          ) : (
-            <Clock className="h-3 w-3 mr-1 inline" />
-          )}
-          {sub.status}
-        </Badge>
-      ),
+      render: (sub) => <StatusBadge status={sub.status} />,
     },
     {
       key: 'marks',
@@ -200,17 +190,12 @@ export default function StudentSubmissionsPage() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-5">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-              <CheckCircle className="h-6 w-6 text-brand-600" />
-              My Submissions & Grades
-            </h1>
-            <p className="text-gray-500 text-sm mt-1">
-              Track your submitted coursework, view grades, and read instructor feedback.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="My Submissions & Grades"
+          subtitle="Track your submitted coursework, view grades, and read instructor feedback."
+          icon={CheckCircle}
+          iconClassName="text-brand-600"
+        />
 
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 text-red-700 text-xs font-medium rounded-xl shadow-sm">
@@ -220,7 +205,6 @@ export default function StudentSubmissionsPage() {
 
         {/* Filters Bar - Premium SaaS Card Style */}
         <div className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center transition-all">
-          {/* Search */}
           <div className="relative w-full sm:max-w-md">
             <Search className="absolute left-3.5 top-3 h-4.5 w-4.5 text-gray-400" />
             <Input
@@ -231,7 +215,6 @@ export default function StudentSubmissionsPage() {
             />
           </div>
 
-          {/* Status Filter Tabs */}
           <div className="flex items-center bg-gray-50 p-1 rounded-xl border border-gray-200/60 text-xs font-medium text-gray-600 shrink-0 w-full sm:w-auto justify-center">
             {(['All', 'Pending', 'Graded'] as const).map((st) => (
               <button

@@ -3,8 +3,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
+import { PageHeader } from '@/components/ui/PageHeader';
+import { StatusBadge } from '@/components/ui/StatusBadge';
 import { Skeleton } from '@/components/ui/Skeleton';
-import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import {
@@ -12,7 +13,6 @@ import {
   ArrowLeft,
   Calendar,
   ExternalLink,
-  Award,
   MessageSquare,
   CheckCircle2,
   AlertCircle,
@@ -147,19 +147,21 @@ export default function StudentAssignmentDetailPage() {
     <DashboardLayout>
       <div className="max-w-3xl space-y-6 mx-auto sm:mx-0">
         {/* Header */}
-        <div className="flex items-start space-x-4 border-b border-gray-200 pb-5">
-          <Button variant="outline" size="sm" onClick={() => router.back()} className="h-9 w-9 p-0 rounded-xl mt-1 shadow-sm hover:border-gray-300">
-            <ArrowLeft className="h-4.5 w-4.5 text-gray-500" />
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-2">
-              <FileText className="h-6 w-6 text-brand-600" /> Assignment Details
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Review guidelines, check submission deadlines, and submit your solution.
-            </p>
-          </div>
-        </div>
+        <PageHeader
+          title="Assignment Details"
+          subtitle="Review guidelines, check submission deadlines, and submit your solution."
+          icon={FileText}
+          actions={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => router.back()}
+              className="gap-1.5 text-xs shadow-sm hover:border-gray-300"
+            >
+              <ArrowLeft className="h-4 w-4 text-gray-500" /> Back
+            </Button>
+          }
+        />
 
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium shadow-sm">
@@ -214,7 +216,7 @@ export default function StudentAssignmentDetailPage() {
                     <CheckCircle2 className="h-5.5 w-5.5 text-emerald-600" />
                     <h3 className="text-lg font-bold text-emerald-900">Evaluation Completed</h3>
                   </div>
-                  <Badge variant="success" className="px-2.5 py-1">Graded</Badge>
+                  <StatusBadge status="Graded" marks={submission.marks ?? submission.grade ?? 0} />
                 </div>
 
                 <div className="flex items-baseline gap-3 bg-white/50 p-4 rounded-xl border border-emerald-100">
@@ -247,7 +249,7 @@ export default function StudentAssignmentDetailPage() {
                     <Clock className="h-5.5 w-5.5 text-brand-600 animate-pulse" />
                     <h3 className="text-lg font-bold text-brand-900">Solution Submitted</h3>
                   </div>
-                  <Badge variant="info" className="px-2.5 py-1 text-brand-700 bg-brand-100 border-brand-200">Pending Review</Badge>
+                  <StatusBadge status="Submitted" />
                 </div>
 
                 <p className="text-sm text-brand-800 leading-relaxed bg-white/50 p-4 rounded-xl border border-brand-100">
@@ -284,9 +286,12 @@ export default function StudentAssignmentDetailPage() {
             {/* CALLOUT CASE 3: Overdue & Not Submitted */}
             {!submission && isPastDueDate && (
               <div className="bg-red-50 border border-red-200 text-red-950 rounded-2xl p-6 shadow-sm space-y-3 transition-all">
-                <div className="flex items-center gap-2.5 text-red-800 border-b border-red-200/60 pb-4">
-                  <AlertCircle className="h-5.5 w-5.5 text-red-600" />
-                  <h3 className="text-lg font-bold">Submission Deadline Passed</h3>
+                <div className="flex items-center justify-between border-b border-red-200/60 pb-4">
+                  <div className="flex items-center gap-2.5 text-red-800">
+                    <AlertCircle className="h-5.5 w-5.5 text-red-600" />
+                    <h3 className="text-lg font-bold">Submission Deadline Passed</h3>
+                  </div>
+                  <StatusBadge status="Overdue" />
                 </div>
                 <p className="text-sm text-red-800 font-medium bg-white/50 p-4 rounded-xl border border-red-100">
                   The due date for this assignment was <span className="font-bold">{format(new Date(assignment.dueDate), 'MMM dd, yyyy HH:mm')}</span>. Submissions are now closed.
