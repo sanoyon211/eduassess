@@ -63,7 +63,6 @@ const SubmissionSchema = new Schema<ISubmission>(
   }
 );
 
-// Compound Indexing to quickly locate student submissions per assignment
 SubmissionSchema.index({ assignmentId: 1, studentId: 1 }, { unique: true });
 SubmissionSchema.index({ studentId: 1, status: 1 });
 

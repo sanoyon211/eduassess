@@ -11,11 +11,9 @@ import { UserRole } from '../models/User';
 
 const router = Router();
 
-// Protect all admin routes with verifyToken and authorizeRoles('Admin')
 router.use(verifyToken);
 router.use(authorizeRoles(UserRole.ADMIN));
 
-// Endpoints
 router.get('/users', getAllUsers);
 router.get('/courses', getAllCourses);
 router.post('/courses', createCourse);

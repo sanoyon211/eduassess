@@ -108,7 +108,6 @@ export default function TeacherDashboardPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Header */}
         <PageHeader
           title="Faculty Assignments"
           subtitle="Manage coursework, track submission deadlines, and evaluate student submissions."
@@ -134,7 +133,6 @@ export default function TeacherDashboardPage() {
           </div>
         )}
 
-        {/* Data Table or Skeleton */}
         {isLoading ? (
           <TableSkeleton rows={5} cols={5} />
         ) : (

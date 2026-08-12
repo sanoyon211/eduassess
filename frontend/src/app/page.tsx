@@ -14,7 +14,6 @@ import {
 export default function Home() {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 text-gray-900 font-sans antialiased selection:bg-brand-500 selection:text-white">
-      {/* Navigation Header */}
       <header className="sticky top-0 z-50 w-full border-b border-gray-200/80 bg-white/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex h-14 sm:h-16 items-center justify-between px-3 sm:px-6 lg:px-8">
           
@@ -52,9 +51,7 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Main Content Area */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
-        {/* Hero Section */}
         <section className="bg-white rounded-3xl border border-gray-200/80 p-6 sm:p-12 lg:p-16 shadow-sm relative overflow-hidden">
           <div className="absolute top-0 right-0 -mt-12 -mr-12 w-96 h-96 bg-brand-50 rounded-full blur-3xl pointer-events-none opacity-60"></div>
           <div className="max-w-3xl space-y-6 relative z-10">
@@ -79,7 +76,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Role Portals Grid */}
         <section className="space-y-6">
           <div>
             <h2 className="text-xl sm:text-2xl font-bold text-gray-900 tracking-tight">Role-Based Ecosystem</h2>
@@ -87,7 +83,6 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {/* Student Card */}
             <div className="bg-white rounded-2xl border border-gray-200/80 p-6 sm:p-8 shadow-sm flex flex-col justify-between hover:border-brand-300 transition-all duration-200 hover:shadow-md space-y-6">
               <div className="space-y-4">
                 <div className="h-12 w-12 rounded-2xl bg-brand-50 border border-brand-100 flex items-center justify-center text-brand-600 shadow-2xs">
@@ -125,7 +120,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Teacher Card */}
             <div className="bg-white rounded-2xl border border-gray-200/80 p-6 sm:p-8 shadow-sm flex flex-col justify-between hover:border-emerald-300 transition-all duration-200 hover:shadow-md space-y-6">
               <div className="space-y-4">
                 <div className="h-12 w-12 rounded-2xl bg-emerald-50 border border-emerald-100 flex items-center justify-center text-emerald-600 shadow-2xs">
@@ -163,7 +157,6 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Admin Card */}
             <div className="bg-white rounded-2xl border border-gray-200/80 p-6 sm:p-8 shadow-sm flex flex-col justify-between hover:border-purple-300 transition-all duration-200 hover:shadow-md space-y-6 sm:col-span-2 lg:col-span-1">
               <div className="space-y-4">
                 <div className="h-12 w-12 rounded-2xl bg-purple-50 border border-purple-100 flex items-center justify-center text-purple-600 shadow-2xs">
@@ -204,7 +197,6 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="border-t border-gray-200 bg-white py-8 mt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-xs text-gray-500 font-medium">
           EduAssess © {new Date().getFullYear()} Enterprise Academic Management System. All rights reserved.

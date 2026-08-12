@@ -48,7 +48,6 @@ const UserSchema = new Schema<IUser>(
   }
 );
 
-// Explicit schema indexes
 UserSchema.index({ role: 1 });
 UserSchema.index({ email: 1, role: 1 });
 

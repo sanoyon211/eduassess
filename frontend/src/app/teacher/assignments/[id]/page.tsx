@@ -52,7 +52,6 @@ export default function AssignmentDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Grade Modal State
   const [isGradeModalOpen, setIsGradeModalOpen] = useState(false);
   const [selectedSubmission, setSelectedSubmission] = useState<SubmissionRecord | null>(null);
   const [marks, setMarks] = useState<number | ''>('');
@@ -200,7 +199,6 @@ export default function AssignmentDetailPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Header */}
         <PageHeader
           title="Student Submissions & Grading"
           subtitle="Review submitted solutions, award scores, and provide written feedback."
@@ -224,7 +222,6 @@ export default function AssignmentDetailPage() {
           </div>
         )}
 
-        {/* Data Table or Skeleton Loader */}
         {isLoading ? (
           <TableSkeleton rows={5} cols={6} />
         ) : (
@@ -235,7 +232,6 @@ export default function AssignmentDetailPage() {
           />
         )}
 
-        {/* GRADE MODAL */}
         <Modal
           isOpen={isGradeModalOpen}
           onClose={() => setIsGradeModalOpen(false)}

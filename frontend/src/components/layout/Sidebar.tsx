@@ -79,7 +79,6 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
   const sidebarContent = (
     <aside className="w-64 bg-white border border-gray-200 rounded-xl flex flex-col h-full overflow-hidden shrink-0 shadow-sm">
-      {/* Mobile Close Header */}
       {onClose && (
         <div className="lg:hidden p-4 border-b border-gray-100 flex items-center justify-between">
           <span className="font-bold text-gray-900">Menu</span>
@@ -92,7 +91,6 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
         </div>
       )}
 
-      {/* Navigation Groups */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
         {navSections.map((group, idx) => (
           <div key={idx} className="space-y-2">
@@ -130,10 +128,8 @@ export function Sidebar({ isOpen = false, onClose }: SidebarProps) {
 
   return (
     <>
-      {/* Desktop Sidebar */}
       <div className="hidden lg:block h-full">{sidebarContent}</div>
 
-      {/* Mobile Drawer */}
       {isOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
           <div

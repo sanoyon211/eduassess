@@ -175,11 +175,15 @@ All seeded accounts use the default password: **`Password123!`**
 
 ---
 
-## 🧪 Build & Type Check Verification
+## 🧪 Build & Unit Test Verification
 
-To verify production builds without errors:
+To run unit tests and verify production builds:
 
 ```bash
+# Run Backend Unit Tests (Jest)
+cd backend
+npm test
+
 # Verify Backend TypeScript Build
 cd backend
 npm run build

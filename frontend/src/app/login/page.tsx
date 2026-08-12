@@ -44,9 +44,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 antialiased">
       <div className="max-w-md w-full space-y-6">
-        {/* Main Centered Login Card */}
         <div className="bg-white border border-gray-200/80 shadow-xl rounded-2xl p-8 space-y-6 transition-all">
-          {/* Brand & Header */}
           <div className="text-center space-y-2">
             <div className="inline-flex items-center justify-center h-14 w-14 rounded-xl bg-brand-600 text-white font-bold mb-3 shadow-lg shadow-brand-500/30">
               <BookOpen className="h-7 w-7" />
@@ -59,7 +57,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Error Banner */}
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2.5 text-xs text-red-700">
               <AlertCircle className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
@@ -67,7 +64,6 @@ export default function LoginPage() {
             </div>
           )}
 
-          {/* Login Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <Input
               label="Email Address"
@@ -101,7 +97,6 @@ export default function LoginPage() {
           </form>
         </div>
 
-        {/* Demo Credentials Quick Fill */}
         <div className="bg-white border border-gray-200/80 shadow-sm rounded-2xl p-5 space-y-4">
           <div className="flex items-center gap-2 text-xs font-semibold text-gray-600">
             <Shield className="h-4 w-4 text-gray-400" />

@@ -146,7 +146,6 @@ export const updateAssignment = async (
       return;
     }
 
-    // STRICT IDOR PROTECTION: Ensure only creator teacher can modify assignment
     if (assignment.createdByTeacherId.toString() !== teacherId) {
       res.status(403).json({
         success: false,
@@ -200,7 +199,6 @@ export const getAssignmentSubmissions = async (
       return;
     }
 
-    // IDOR Protection: Validate that the assignment was created by the requesting teacher
     if (assignment.createdByTeacherId.toString() !== teacherId) {
       res.status(403).json({
         success: false,
@@ -255,7 +253,6 @@ export const gradeSubmission = async (
       return;
     }
 
-    // Fetch associated assignment to verify ownership & maximum marks limit
     const assignment = await Assignment.findById(submission.assignmentId);
     if (!assignment) {
       res.status(404).json({
@@ -265,7 +262,6 @@ export const gradeSubmission = async (
       return;
     }
 
-    // IDOR Protection: Ensure teacher cannot grade submissions for assignments belonging to other teachers
     if (assignment.createdByTeacherId.toString() !== teacherId) {
       res.status(403).json({
         success: false,

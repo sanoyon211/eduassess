@@ -4,9 +4,8 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Cookies from 'js-cookie';
 import api from '../lib/axios';
-import { UserRole, User } from '@/types'; // Imported from central types
+import { UserRole, User } from '@/types';
 
-// AuthUser can just extend the base User type
 export interface AuthUser extends Omit<User, 'createdAt' | 'updatedAt'> {}
 
 interface AuthContextType {
@@ -28,7 +27,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const pathname = usePathname();
 
-  // Load user credentials from storage on initial load
   useEffect(() => {
     const initializeAuth = () => {
       const storedToken = Cookies.get('eduassess_token') || localStorage.getItem('eduassess_token');
@@ -50,7 +48,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     initializeAuth();
   }, []);
 
-  // Automatic Redirection for protected routes
   useEffect(() => {
     if (isLoading) return;
 
@@ -87,13 +84,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setToken(jwtToken);
       setUser(userPayload);
 
-      // Persist in Cookies & localStorage
       Cookies.set('eduassess_token', jwtToken, { expires: 7 });
       Cookies.set('eduassess_user', JSON.stringify(userPayload), { expires: 7 });
       localStorage.setItem('eduassess_token', jwtToken);
       localStorage.setItem('eduassess_user', JSON.stringify(userPayload));
 
-      // Redirect based on User Role
       if (userPayload.role === UserRole.ADMIN) {
         router.push('/admin');
       } else if (userPayload.role === UserRole.TEACHER) {
@@ -106,7 +101,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     } catch (error: any) {
       throw error;
     } finally {
-      setIsLoading(false); // Only handle loading state here
+      setIsLoading(false);
     }
   };
 
@@ -119,7 +114,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setIsLoading(true);
     try {
       await api.post('/auth/register', { name, email, password, role });
-      // Automatically login user after registration
       await login(email, password);
     } catch (error: any) {
       setIsLoading(false);

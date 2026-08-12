@@ -65,12 +65,10 @@ export default function TeacherSubmissionsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filters
   const [statusFilter, setStatusFilter] = useState<'All' | 'Pending' | 'Graded'>('All');
   const [assignmentFilter, setAssignmentFilter] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Grade Modal State
   const [isGradeModalOpen, setIsGradeModalOpen] = useState(false);
   const [selectedSubmission, setSelectedSubmission] = useState<SubmissionRecord | null>(null);
   const [marks, setMarks] = useState<number | ''>('');
@@ -275,7 +273,6 @@ export default function TeacherSubmissionsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Header */}
         <PageHeader
           title="Grade Student Submissions"
           subtitle="Review, evaluate, and provide feedback on student assignment submissions."
@@ -289,7 +286,6 @@ export default function TeacherSubmissionsPage() {
           </div>
         )}
 
-        {/* Filters Bar - Premium SaaS Card Style */}
         <div className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm flex flex-col lg:flex-row gap-4 justify-between items-center transition-all">
           <div className="relative w-full lg:max-w-md">
             <Search className="absolute left-3.5 top-3 h-4.5 w-4.5 text-gray-400" />
@@ -340,7 +336,6 @@ export default function TeacherSubmissionsPage() {
           </div>
         </div>
 
-        {/* Data Table */}
         {isLoading ? (
           <TableSkeleton rows={5} cols={7} />
         ) : (
@@ -351,7 +346,6 @@ export default function TeacherSubmissionsPage() {
           />
         )}
 
-        {/* Grade Modal */}
         <Modal
           isOpen={isGradeModalOpen}
           onClose={() => setIsGradeModalOpen(false)}

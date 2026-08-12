@@ -26,7 +26,6 @@ export default function NewAssignmentPage() {
   const [courses, setCourses] = useState<CourseOption[]>([]);
   const [isLoadingCourses, setIsLoadingCourses] = useState(true);
 
-  // Form states
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [courseId, setCourseId] = useState('');
@@ -91,7 +90,6 @@ export default function NewAssignmentPage() {
   return (
     <DashboardLayout>
       <div className="max-w-3xl space-y-6">
-        {/* Header */}
         <div className="flex items-start space-x-4 border-b border-gray-200 pb-5">
           <Link href="/teacher" className="mt-1">
             <Button variant="outline" size="sm" className="h-9 w-9 p-0 rounded-xl shadow-sm hover:border-gray-300">
@@ -114,7 +112,6 @@ export default function NewAssignmentPage() {
           </div>
         )}
 
-        {/* Form Container */}
         <div className="bg-white border border-gray-200/80 rounded-2xl p-6 sm:p-8 shadow-sm transition-all">
           <form onSubmit={handleSubmit} className="space-y-5">
             <Input

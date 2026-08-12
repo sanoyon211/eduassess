@@ -50,19 +50,16 @@ export default function AdminCoursesPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Modals visibility
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEnrollModalOpen, setIsEnrollModalOpen] = useState(false);
   const [selectedCourseForEnroll, setSelectedCourseForEnroll] = useState<CourseRecord | null>(null);
 
-  // Form states for Create Course
   const [courseName, setCourseName] = useState('');
   const [courseCode, setCourseCode] = useState('');
   const [assignedTeacherId, setAssignedTeacherId] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
 
-  // Form state for Enroll Students
   const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
   const [isEnrolling, setIsEnrolling] = useState(false);
 
@@ -213,7 +210,6 @@ export default function AdminCoursesPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Header */}
         <PageHeader
           title="Course Management"
           subtitle="Create academic courses, assign faculty instructors, and enroll students."
@@ -237,7 +233,6 @@ export default function AdminCoursesPage() {
           </div>
         )}
 
-        {/* Data Table or Skeleton Loader */}
         {isLoading ? (
           <TableSkeleton rows={5} cols={5} />
         ) : (
@@ -248,7 +243,6 @@ export default function AdminCoursesPage() {
           />
         )}
 
-        {/* MODAL 1: Create New Course */}
         <Modal
           isOpen={isCreateModalOpen}
           onClose={() => setIsCreateModalOpen(false)}
@@ -312,7 +306,6 @@ export default function AdminCoursesPage() {
           </form>
         </Modal>
 
-        {/* MODAL 2: Enroll Students */}
         <Modal
           isOpen={isEnrollModalOpen}
           onClose={() => setIsEnrollModalOpen(false)}

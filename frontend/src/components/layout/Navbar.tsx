@@ -17,7 +17,6 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
     <header className="bg-white border-b border-gray-200 sticky top-0 z-40 w-full shadow-sm">
       <div className="flex items-center justify-between h-16 px-4 sm:px-6 w-full max-w-[1920px] mx-auto">
         
-        {/* Left Side: Logo & Mobile Toggle */}
         <div className="flex items-center gap-4 w-1/3">
           {onToggleMobileMenu && (
             <button
@@ -41,7 +40,6 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
           </Link>
         </div>
 
-        {/* Middle Side: Workspace Indicator */}
         <div className="hidden md:flex items-center justify-center w-1/3">
           {user && (
             <div className="flex items-center gap-2 text-lg text-gray-800 bg-gray-50 px-4 py-1.5 rounded-full border border-gray-200/60 shadow-xs">
@@ -52,23 +50,18 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
           )}
         </div>
 
-        {/* Right Side: Profile & Logout */}
         <div className="flex items-center justify-end gap-4 w-1/3">
           {user ? (
             <div className="flex items-center gap-3">
-              
-              {/* User Icon (Moved to the left of the name) */}
               <div className="h-9 w-9 rounded-full bg-gray-50 border border-gray-200 flex items-center justify-center text-gray-500 shrink-0">
                 <UserIcon className="h-5 w-5" />
               </div>
 
-              {/* Name & Email (Left aligned) */}
               <div className="hidden sm:flex flex-col items-start">
                 <span className="text-sm font-bold text-gray-900 leading-none">{user.name}</span>
                 <span className="text-xs text-gray-500 mt-1">{user.email}</span>
               </div>
 
-              {/* Logout Button */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -79,7 +72,6 @@ export function Navbar({ onToggleMobileMenu }: NavbarProps) {
                 <LogOut className="h-5 w-5" />
               </Button>
 
-              {/* Mobile only logout icon */}
               <button 
                 onClick={logout}
                 className="sm:hidden p-2 text-gray-400 hover:text-red-600 rounded-md hover:bg-red-50 ml-1 transition-colors"

@@ -50,7 +50,6 @@ export default function StudentSubmissionsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Filters
   const [statusFilter, setStatusFilter] = useState<'All' | 'Pending' | 'Graded'>('All');
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -71,7 +70,6 @@ export default function StudentSubmissionsPage() {
     fetchMySubmissions();
   }, [fetchMySubmissions]);
 
-  // Filtered Submissions
   const filteredSubmissions = submissions.filter((sub) => {
     if (statusFilter !== 'All' && sub.status !== statusFilter) return false;
 
@@ -189,7 +187,6 @@ export default function StudentSubmissionsPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Header */}
         <PageHeader
           title="My Submissions & Grades"
           subtitle="Track your submitted coursework, view grades, and read instructor feedback."
@@ -203,7 +200,6 @@ export default function StudentSubmissionsPage() {
           </div>
         )}
 
-        {/* Filters Bar - Premium SaaS Card Style */}
         <div className="bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm flex flex-col sm:flex-row gap-4 justify-between items-center transition-all">
           <div className="relative w-full sm:max-w-md">
             <Search className="absolute left-3.5 top-3 h-4.5 w-4.5 text-gray-400" />
@@ -232,7 +228,6 @@ export default function StudentSubmissionsPage() {
           </div>
         </div>
 
-        {/* Data Table */}
         {isLoading ? (
           <TableSkeleton rows={5} cols={7} />
         ) : (

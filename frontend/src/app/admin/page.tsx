@@ -45,7 +45,6 @@ export default function AdminDashboardPage() {
   return (
     <DashboardLayout>
       <div className="space-y-8">
-        {/* Header Title */}
         <PageHeader
           title="Admin Overview"
           subtitle="Institution metrics, user management, and course allocation."
@@ -58,7 +57,6 @@ export default function AdminDashboardPage() {
           }
         />
 
-        {/* Stats Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           <StatsCard
             title="Total Users"
@@ -94,7 +92,6 @@ export default function AdminDashboardPage() {
           />
         </div>
 
-        {/* Quick Navigation Panel */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm space-y-4 transition-all hover:shadow-md flex flex-col justify-between">
             <div>

@@ -60,7 +60,6 @@ export default function StudentAssignmentDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Submission Form State
   const [fileUrl, setFileUrl] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -146,7 +145,6 @@ export default function StudentAssignmentDetailPage() {
   return (
     <DashboardLayout>
       <div className="max-w-3xl space-y-6 mx-auto sm:mx-0">
-        {/* Header */}
         <PageHeader
           title="Assignment Details"
           subtitle="Review guidelines, check submission deadlines, and submit your solution."
@@ -177,7 +175,6 @@ export default function StudentAssignmentDetailPage() {
           </div>
         ) : assignment ? (
           <>
-            {/* Assignment Overview Card */}
             <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm space-y-5 transition-all">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-gray-100 pb-5">
                 <div>
@@ -208,7 +205,6 @@ export default function StudentAssignmentDetailPage() {
               )}
             </div>
 
-            {/* CALLOUT CASE 1: Assignment is Already GRADED */}
             {submission && submission.status === 'Graded' && (
               <div className="bg-emerald-50/80 border border-emerald-200 text-emerald-950 rounded-2xl p-6 shadow-sm space-y-5 transition-all">
                 <div className="flex items-center justify-between border-b border-emerald-200/60 pb-4">
@@ -241,7 +237,6 @@ export default function StudentAssignmentDetailPage() {
               </div>
             )}
 
-            {/* CALLOUT CASE 2: Assignment is SUBMITTED (Pending Review) */}
             {submission && submission.status === 'Pending' && (
               <div className="bg-brand-50/80 border border-brand-200 text-brand-950 rounded-2xl p-6 shadow-sm space-y-4 transition-all">
                 <div className="flex items-center justify-between border-b border-brand-200/60 pb-4">
@@ -283,7 +278,6 @@ export default function StudentAssignmentDetailPage() {
               </div>
             )}
 
-            {/* CALLOUT CASE 3: Overdue & Not Submitted */}
             {!submission && isPastDueDate && (
               <div className="bg-red-50 border border-red-200 text-red-950 rounded-2xl p-6 shadow-sm space-y-3 transition-all">
                 <div className="flex items-center justify-between border-b border-red-200/60 pb-4">
@@ -299,7 +293,6 @@ export default function StudentAssignmentDetailPage() {
               </div>
             )}
 
-            {/* SUBMISSION FORM SECTION */}
             {submission && submission.status === 'Graded' ? (
               <div className="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm flex items-center gap-3 text-gray-500 text-sm font-medium">
                 <div className="p-2 bg-gray-50 rounded-lg"><Lock className="h-4.5 w-4.5 text-gray-400" /></div>
@@ -330,7 +323,6 @@ export default function StudentAssignmentDetailPage() {
                 </Button>
               </div>
             ) : (
-              /* ACTIVE SUBMISSION FORM (NEW OR UPDATE) */
               <div className="bg-white border border-brand-200/60 rounded-2xl p-6 sm:p-8 shadow-md space-y-5 transition-all relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-1 h-full bg-brand-500"></div>
                 <div className="border-b border-gray-100 pb-4 flex items-start sm:items-center justify-between gap-4">

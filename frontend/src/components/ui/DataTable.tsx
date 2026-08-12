@@ -38,7 +38,6 @@ export function DataTable<T>({
 
   return (
     <div className={cn('w-full space-y-4', className)}>
-      {/* Mobile Stacked Card View (< md) */}
       <div className="grid grid-cols-1 gap-4 md:hidden">
         {data.map((item, index) => {
           const rowKey = keyExtractor
@@ -69,7 +68,6 @@ export function DataTable<T>({
         })}
       </div>
 
-      {/* Desktop Traditional Table View (>= md) */}
       <div className="hidden md:block w-full bg-white border border-gray-200 rounded-xl shadow-sm overflow-x-auto">
         <table className="w-full text-left text-sm border-collapse min-w-[640px]">
           <thead className="bg-gray-50 border-b border-gray-200">

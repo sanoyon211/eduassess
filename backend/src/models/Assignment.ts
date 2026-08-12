@@ -66,7 +66,6 @@ const AssignmentSchema = new Schema<IAssignment>(
   }
 );
 
-// Compound Indexing for fast queries by course and due date
 AssignmentSchema.index({ courseId: 1, dueDate: 1 });
 AssignmentSchema.index({ createdByTeacherId: 1, status: 1 });
 

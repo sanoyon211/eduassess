@@ -15,14 +15,11 @@ export const getEnrolledAssignments = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    // IDOR Protection: Always use authenticated user's ID
     const studentId = req.user?.userId;
 
-    // Find all courses student is enrolled in
     const enrolledCourses = await Course.find({ enrolledStudentIds: studentId }).select('_id');
     const courseIds = enrolledCourses.map((c) => c._id);
 
-    // Fetch published assignments for these courses
     const assignments = await Assignment.find({
       courseId: { $in: courseIds },
       status: AssignmentStatus.PUBLISHED,
@@ -41,11 +38,6 @@ export const getEnrolledAssignments = async (
   }
 };
 
-/**
- * @desc    Submit an assignment for a course (Strict IDOR prevention & deadline enforcement)
- * @route   POST /api/student/submissions
- * @access  Private (Student)
- */
 export const submitAssignment = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -53,7 +45,6 @@ export const submitAssignment = async (
 ): Promise<void> => {
   try {
     const { assignmentId, fileUrl } = req.body;
-    // IDOR Protection: Force student ID to match authenticated user
     const studentId = req.user?.userId;
 
     if (!assignmentId || !fileUrl) {
@@ -81,7 +72,6 @@ export const submitAssignment = async (
       return;
     }
 
-    // Verify student is enrolled in the course offering this assignment
     const isEnrolled = await Course.findOne({
       _id: assignment.courseId,
       enrolledStudentIds: studentId,
@@ -95,7 +85,6 @@ export const submitAssignment = async (
       return;
     }
 
-    // Deadline Enforcement: Prevent submission past dueDate
     const now = new Date();
     if (now > new Date(assignment.dueDate)) {
       res.status(400).json({
@@ -105,7 +94,6 @@ export const submitAssignment = async (
       return;
     }
 
-    // Check if student has already submitted for this assignment
     const existingSubmission = await Submission.findOne({ assignmentId, studentId });
     if (existingSubmission) {
       res.status(400).json({
@@ -141,18 +129,12 @@ export const submitAssignment = async (
   }
 };
 
-/**
- * @desc    Get student's own submissions and grades (Strict IDOR prevention)
- * @route   GET /api/student/submissions
- * @access  Private (Student)
- */
 export const getMySubmissions = async (
   req: AuthenticatedRequest,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
   try {
-    // IDOR Protection: Always retrieve strictly for req.user.userId
     const studentId = req.user?.userId;
 
     const submissions = await Submission.find({ studentId })
@@ -173,11 +155,6 @@ export const getMySubmissions = async (
   }
 };
 
-/**
- * @desc    Update an existing submission before deadline (Strict IDOR & deadline enforcement)
- * @route   PUT /api/student/submissions/:id
- * @access  Private (Student)
- */
 export const updateSubmission = async (
   req: AuthenticatedRequest,
   res: Response,
@@ -205,7 +182,6 @@ export const updateSubmission = async (
       return;
     }
 
-    // IDOR Protection: Student can only edit their own submission
     if (submission.studentId.toString() !== studentId) {
       res.status(403).json({
         success: false,
@@ -214,7 +190,6 @@ export const updateSubmission = async (
       return;
     }
 
-    // Cannot edit if already graded
     if (submission.status === SubmissionStatus.GRADED) {
       res.status(400).json({
         success: false,
@@ -232,7 +207,6 @@ export const updateSubmission = async (
       return;
     }
 
-    // Deadline Enforcement: Prevent update past dueDate
     const now = new Date();
     if (now > new Date(assignment.dueDate)) {
       res.status(400).json({

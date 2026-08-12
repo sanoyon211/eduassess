@@ -8,11 +8,9 @@ export const connectDB = async (): Promise<void> => {
     console.log(`[MongoDB] Connected successfully to host: ${conn.connection.host} | DB: ${conn.connection.name}`);
   } catch (error: any) {
     console.error(`[MongoDB] Connection failed: ${error.message}`);
-    // Process exit optional or handled based on deployment environment
   }
 };
 
-// Mongoose Connection Event Listeners
 mongoose.connection.on('disconnected', () => {
   console.warn('[MongoDB] Disconnected from database server');
 });

@@ -171,7 +171,6 @@ export default function StudentDashboardPage() {
   return (
     <DashboardLayout>
       <div className="space-y-8">
-        {/* Header */}
         <PageHeader
           title="Student Portal Overview"
           subtitle="Track enrolled coursework, submission deadlines, and feedback evaluations."
@@ -184,7 +183,6 @@ export default function StudentDashboardPage() {
           }
         />
 
-        {/* Stats Cards Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
           <StatsCard
             title="Total Assignments"
@@ -218,7 +216,6 @@ export default function StudentDashboardPage() {
           </div>
         )}
 
-        {/* Data Table or Skeleton Loader */}
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-4">
             <h2 className="text-lg font-bold text-gray-900">Enrolled Course Assignments</h2>

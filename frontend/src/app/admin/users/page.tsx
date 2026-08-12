@@ -96,7 +96,6 @@ export default function AdminUsersPage() {
   return (
     <DashboardLayout>
       <div className="space-y-6">
-        {/* Page Header */}
         <PageHeader
           title="Institution Users"
           subtitle="Complete list of all registered accounts across Admin, Faculty, and Student roles."
@@ -109,7 +108,6 @@ export default function AdminUsersPage() {
           }
         />
 
-        {/* Filter Controls - Premium SaaS Card Style */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-gray-200/80 shadow-sm transition-all">
           <div className="relative w-full sm:max-w-md">
             <Search className="absolute left-3.5 top-3 h-4.5 w-4.5 text-gray-400" />
@@ -131,14 +129,12 @@ export default function AdminUsersPage() {
           </div>
         </div>
 
-        {/* Error message display */}
         {error && (
           <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-xs text-red-700 font-medium">
             {error}
           </div>
         )}
 
-        {/* User Data Table or Skeleton Loader */}
         {isLoading ? (
           <TableSkeleton rows={6} cols={4} />
         ) : (

@@ -16,7 +16,6 @@ const seedDatabase = async () => {
     await mongoose.connect(MONGO_URI);
     console.log('[Seed] Database connected successfully.');
 
-    // Clear existing database collections
     console.log('[Seed] Clearing existing collections...');
     await User.deleteMany({});
     await Course.deleteMany({});
@@ -24,12 +23,10 @@ const seedDatabase = async () => {
     await Submission.deleteMany({});
     console.log('[Seed] Database cleared.');
 
-    // Default password for all seeded users
     const defaultPassword = 'Password123!';
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(defaultPassword, salt);
 
-    // 1. Insert 1 Admin, 2 Teachers, 3 Students
     console.log('[Seed] Creating users...');
     const admin = await User.create({
       name: 'System Admin',
@@ -73,7 +70,6 @@ const seedDatabase = async () => {
       role: UserRole.STUDENT,
     });
 
-    // 2. Insert 2 Courses
     console.log('[Seed] Creating courses...');
     const course1 = await Course.create({
       name: 'Computer Science 101',
@@ -89,7 +85,6 @@ const seedDatabase = async () => {
       enrolledStudentIds: [student2._id, student3._id],
     });
 
-    // 3. Insert Assignments
     console.log('[Seed] Creating assignments...');
     const now = new Date();
     const sevenDaysFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
@@ -125,7 +120,6 @@ const seedDatabase = async () => {
       },
     ]);
 
-    // Print Credentials summary to Console
     console.log('\n======================================================');
     console.log('         EDUASSESS SEED COMPLETED SUCCESSFULLY        ');
     console.log('======================================================');

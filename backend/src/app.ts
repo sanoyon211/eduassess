@@ -14,7 +14,6 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Security & Performance Middlewares
 app.use(helmet({ contentSecurityPolicy: false }));
 app.use(compression());
 app.use(cors({
@@ -24,10 +23,8 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Swagger OpenAPI Documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Base Route & Health Check
 app.get('/', (req: Request, res: Response) => {
   res.status(200).json({
     success: true,
@@ -47,16 +44,12 @@ app.get('/api/health', (req: Request, res: Response) => {
   });
 });
 
-// Centralized API Routes
 app.use('/api', apiRouter);
 
-// Handle Unhandled Routes (404)
 app.use(notFoundHandler);
 
-// Global Error Handler Middleware
 app.use(errorHandler);
 
-// Connect Database and Start Express Server
 const startServer = async () => {
   await connectDB();
   app.listen(PORT, () => {

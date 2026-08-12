@@ -10,7 +10,6 @@ const api = axios.create({
   },
 });
 
-// Request Interceptor: Attach Bearer JWT Token automatically from Cookies or localStorage
 api.interceptors.request.use(
   (config) => {
     let token = Cookies.get('eduassess_token');
@@ -28,18 +27,15 @@ api.interceptors.request.use(
   }
 );
 
-// Response Interceptor: Handle Unauthorized / Expired Tokens
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401 && typeof window !== 'undefined') {
-      // Clear expired credentials
       Cookies.remove('eduassess_token');
       Cookies.remove('eduassess_user');
       localStorage.removeItem('eduassess_token');
       localStorage.removeItem('eduassess_user');
       
-      // Auto-redirect to login page to prevent stuck UI
       if (window.location.pathname !== '/login') {
         window.location.href = '/login';
       }
